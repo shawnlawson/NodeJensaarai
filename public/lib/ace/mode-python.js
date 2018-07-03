@@ -106,23 +106,14 @@ ace.define('ace/mode/python_highlight_rules', ['require', 'exports', 'module', '
 		'parent|name|path|children|destroy|absTime|frame|seconds|outputConnectors|' +
 		'connect|disconnect|')
 
-    var tidalFunctions = (
-        'slow|jux|rev|striate|sound|juxBy|brak|shape|degrade|speed|accelerate|degradeBy|' +
-        'density|fit|run|chop|unit|iter|every|palindrome|slowspread|smash|spread|trunc|zoom|' +
-        'gap|stut|mask|foldEvery|sometimesBy|sometimes|often|rarely|almostNever|almostAlways|' +
-        'when|elem|whenmod|within|slowcat|cat|interlace|randcat|seqP|append|spin|stack|' +
-        'superimpose|weave|wedge|anticipate|gain|bandf|bandq|begin|cps|coarse|crush|cut|' +
-        'cutoff|end|loop|nudge|pan|resonance|vowel|choose|irand|scale|up|hush|silence|'
-        )
-
     var keywordMapper = this.createKeywordMapper({
       'invalid.deprecated': 'debugger',
       'support.function': builtinFunctions,
       'constant.language': builtinConstants,
       'keyword': keywords,
       'support.function.other': touchDesignerFunctions,
-      'variable.language': touchDesignerObjects,
-      'storage': tidalFunctions
+      'variable.language': touchDesignerObjects
+      // 'storage': tidalFunctions
     }, 'identifier')
 
     var strPre = '(?:r|u|ur|R|U|UR|Ur|uR)?'
