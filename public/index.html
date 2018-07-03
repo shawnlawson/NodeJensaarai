@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>/     /    //    /// Jensaarai \\\   \\   \     \</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="css/livewriting.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- editors ==================================== -->
+    <div id="editor"></div>
+    <div id="feedback"></div>
+    
+    <!-- livewriting NAV ================================= -->
+    <div class='livewriting_navbar'>
+        <div class='livewriting_slider_wrapper'>
+            <div class='livewriting_slider'></div>
+        </div>
+        <div class="livewriting_toolbar_wrapper">
+            <div class="livewriting_navbar_buttons_left">
+                <button id="lw_toolbar_play" class="lw_toolbar_button">pause</button>
+                <button id="lw_toolbar_beginning" class="lw_toolbar_button">go to beginning</button>
+                <button id="lw_toolbar_end" class="lw_toolbar_button">go to end</button>
+            </div>
+            <div class="livewriting_navbar_buttons_right">
+                <div>
+                    <button id="lw_toolbar_stat" class="lw_toolbar_button">Show Histogram</button>
+                    <button id="lw_toolbar_skip" class="lw_toolbar_button">skip inactive parts</button>
+                    <!-- <button id="lw_toolbar_setting" class="lw_toolbar_button">settings</button> -->
+                    <button class="lw_toolbar_button livewriting_speed">1 X</button>
+                    <button class="lw_toolbar_button lw_toolbar_speed">adjust the speed</button>
+                    <div id="lw_playback_slider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- networking UI ================================= -->
+    <div id="networkPanel" title="Firebase Connection">
+        <p>Firebase Hash</p>
+        <input type="submit" id="new_hash" value="New" />
+        <br/><br/>
+        <input type="text" id="firebase_hash" value="-L96f9MrXfXSkw97cLp1" />
+        <label for="firebase_hash">Firebase Hash</label>
+        <br/><br/>
+        <input type="submit" id="connect_to_firebase" value="Connect" />
+        <input type="submit" id="disconnect_to_firebase" value="Disconnect" />        
+        <hr />
+        <p>OSC ports</p>
+        <input type="submit" id="set_osc_ports" value="Update Ports" />
+        <br /><br />
+        <input type="text" id="python_send" value="7777" />
+        <label for="python_send">Python Send</label>
+        <br />
+        <input type="text" id="tidal_send" value="7778" />
+        <label for="tidal_send">Tidal Send</label>
+        <br />
+        <input type="text" id="lua_send" value="7779" />
+        <label for="lua_send">Lua Send</label>
+        <br />
+        <input type="text" id="glsl_send" value="7780" />
+        <label for="glsl_send">GLSL Send</label>
+        <br />
+        <input type="text" id="all_receive" value="8888" />
+        <label for="all_receive">Receive</label>
+    </div>
+    
+    <!-- footer UI ================================= -->
+    <div id="footer">
+        <div id="footerUI">
+            <div id="selectFontSizeDIV" class="uiButton" title="Text Size">
+                <select id="selectFontSize">
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="14" selected="selected">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                </select>
+            </div>
+            <div id="selectBackgroundAlphaDIV" class="uiButton" title="Background Alpha">
+                <select id="selectBackgroundAlpha">
+                    <option value="0.0">0.0</option>
+                    <option value="0.1">0.1</option>
+                    <option value="0.2" selected="selected">0.2</option>
+                    <option value="0.3">0.3</option>
+                    <option value="0.4">0.4</option>
+                    <option value="0.5">0.5</option>
+                    <option value="0.6">0.6</option>
+                    <option value="0.7">0.7</option>
+                    <option value="0.8">0.8</option>
+                    <option value="0.9">0.9</option>
+                    <option value="1.0">1.0</option>
+                </select>
+            </div>
+            <div id="selectHighlightingDIV" class="uiButton" title="Language Highlighting">
+                <select id="selectHighlighting">
+                    <option value="none" selected="selected">none</option>
+                    <option value="glsl">glsl</option>
+                    <option value="tidal" >tidal</option>
+                    <option value="python">python</option>
+                    <option value="lua">lua</option>
+                </select>
+            </div>
+            <input type="checkbox" id="autoComplete" value="" />
+            <label for="autoComplete" class="uiButton" title="Toggle Auto Complete"></label>
+             <input type="checkbox" id="debug" value="" />
+            <label for="debug" class="uiButton" title="Toggle Debugging"></label>
+            <input type="submit" id="openFile" value="" class="uiButton" title="Open Text Recording" />
+            <input type="file" id="myFile" class="hide" />
+            <input type="submit" id="saveFile" value="" class="uiButton" title="Save Text Recording" />
+            <input type="submit" id="playback" value="" class="uiButton" title="Playback Recording"/>
+            <input type="checkbox" id="extraWindow" value="" />
+            <label for="extraWindow" class="uiButton" title="Extra Window"></label>
+            <input type="submit" id="network" value="" class="uiButton" title="Hash Panel" />
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="lib/firebase.js"></script>
+<script> window.$ = window.jQuery = require('jquery') </script>
+<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="lib/ace/ace.js"></script>
+<script type="text/javascript" src="lib/ace/ext-language_tools.js"></script>
+<script type="text/javascript" src="lib/ace/ext-searchbox.js"></script>
+<script> window.Firepad = require('firepad') </script>
+<script type="text/javascript" src="lib/FileSaver.js"></script>
+<script type="text/javascript" src="js/livewriting.js"></script>
+<script type="text/javascript" src="js/myUI.js"></script>
+<script type="text/javascript" src="js/myAce.js"></script>
+<script type="text/javascript" src="js/myFirebase.js"></script>
+<script type="text/javascript" src="js/myCommunication.js"></script>
+</html>

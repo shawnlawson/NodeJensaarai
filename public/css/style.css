@@ -1,0 +1,207 @@
+html,
+body {
+    overflow: hidden;
+    /*background: black;*/
+    /*background: transparent;*/
+    background: rgba(0, 0, 0, .2);
+}
+
+@font-face{
+    font-family: 'Fira Code';
+    font-weight: normal;
+    font-style: normal;
+}
+
+#editor {
+    position: absolute;
+    /*background: black;*/
+    background: transparent;
+    left: 0px;
+    top: 0px;
+    bottom: 200px;
+    right: 0px;
+    text-shadow: rgba( 0, 0, 0, 1) 0px 1px 1px;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-family: 'Fira Code', monospace;
+}
+
+#feedback {
+    position: absolute;
+    background: transparent;
+    height: 200px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    text-shadow: rgba( 0, 0, 0, 1) 0px 1px 1px;
+}
+
+.uiButton {
+    margin-left: 8px;
+    margin-top: 4px;
+    width: 32px;
+    height: 32px;
+    float: left;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+.ui-widget * { outline: 0; }​
+
+.ui-widget{
+    font-size:10px;
+}
+.ui-tabs {
+    border: none;
+    background: transparent;
+    padding: .5em;
+}
+.ui-dialog {
+    background:rgba(0,0,0,0.4);
+}
+.ui-dialog-content {
+    padding: 0 !important;
+}
+.ui-widget-header {
+    background:rgba(128,128,128,0.4);
+}
+.ui-selectmenu-button {
+    background:rgba(255,255,255,0.4);
+}
+.ui-selectmenu-menu {
+    background:rgba(0,0,0,0.4);
+    width: 50px;
+}
+
+.codeHighlight {
+    word-wrap: break-word;
+    margin: 0;
+
+}
+.codeHighlight .ace-monokai{  
+    background-color: rgba(0,0,0,0.4);
+    padding: .5em;
+}
+
+#footer {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    position:absolute; 
+     background: transparent;   
+}
+
+#footerUI {
+    position: relative;
+    /*left: 150px;*/
+    background-color:rgba(0,0,0,.4);
+}
+
+#selectFontSizeDIV,  #selectFontSize,
+#selectBackgroundAlphaDIV,  #selectBackgroundAlpha,
+#selectHighlightingDIV,  #selectHighlighting{
+    width: auto;
+    font-size: 10pt;
+}
+
+#autoComplete + label {
+    background: url('../images/functionsOff.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+#autoComplete:checked + label {
+    background:url('../images/functionsOn.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+
+
+#audioButton {
+    background: url('../images/micOff.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#debug + label {
+    background: url('../images/debugOff.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+#debug:checked + label {
+    background:url('../images/debugOn.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+
+#playback {
+    background: url('../images/play.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#extraWindow + label{
+    background: url('../images/multiOff.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+#extraWindow:checked + label {
+    background: url('../images/multiOn.png') no-repeat center;
+    background-size: 24px 24px;
+    padding: 0px;
+    border: none;
+}
+
+#network {
+    background: url('../images/networkOff.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#openFile {
+    background: url('../images/open.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#saveFile {
+    background: url('../images/save.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#saveImage {
+    background: url('../images/saveImage.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+#funcButton {
+    background: url('../images/functionsOff.png') no-repeat center;
+    background-size: 24px 24px;
+}
+
+.ace_status-indicator {
+    /*color: white;*/
+    position: absolute;
+    right: 0;
+    border-left: 1px solid;
+}
+::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+::-webkit-scrollbar-track {
+    /*box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);*/
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.4);
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(100, 100, 100, 0.0);
+}
