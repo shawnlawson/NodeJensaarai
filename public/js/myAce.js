@@ -173,10 +173,8 @@ editor.runTidal = function(theRange, execType, theLanguage) {
             sel.start.column = 0
             sel.end.column = 1
             var theLine = editor.session.doc.getLine(sel.end.row)
-                sel.end.column = theLine.length
-                
+            sel.end.column = theLine.length    
         }
-        // whichLanguage(sel)
     } else { // is block execution
         sel = theRange
         sel.start.column = 0
@@ -185,7 +183,7 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         while (sel.start.row > 0) {
             var lineStart = editor.session.doc.getLine(sel.start.row)
             var resultStart = endExp.exec(lineStart)
-            if(null !== /\s*\/+/i.exec(lineStart)) {
+            if(null !== /\s*\/+/i.exec(lineStart)) { //comment line?
                 sel.start.row += 1
                 break
             } else if (resultStart !== null || "" === lineStart) {
@@ -232,7 +230,6 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         'c': theCode
     }
     //end saving for NN
-
 
     ipcRenderer.send(mLanguage, theCode)
 }
