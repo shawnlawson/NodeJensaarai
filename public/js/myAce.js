@@ -5,6 +5,10 @@ var mExecTimer = null
 var mFeedback = false
 var mLanguage = 'python'
 
+var NNSave = []
+var NNStartTime = Date.now()
+var NNDeltaTime = 0
+
 function setShaderFromEditor() {
     var rawCode = editor.session.doc.getAllLines()
     var rawCodeLength = rawCode.length
@@ -98,6 +102,28 @@ editor.setOptions({
 editor.livewriting = livewriting
 editor.livewriting('create', 'ace', {}, '')
 
+//start NN save Command
+editor.commands.addCommand({
+    name: 'saveForNN',
+    bindKey: {
+        win: 'Ctrl-Shift-S',
+        mac: 'Command-Shift-S'
+    },
+    exec: function() {
+        if (NNSave !== null) {
+
+            var blob = new Blob([JSON.stringify(NNSave, null, ' ')], { type: 'text/plain;charset=utf-8' })
+            var d = new Date()
+            d.setMonth(d.getMonth() + 1)
+            var fName = d.getFullYear() + '_' + d.getMonth() + 'M_' + d.getDate() + 'D_' +
+                d.getHours() + 'H_' + d.getMinutes() + 'm_' + d.getSeconds() + 's'
+
+            saveAs(blob, 'NN_tidal_' + fName + '.txt')
+        }
+    }
+})
+//end NN save Command
+
 //TODO:: need to get correct language in
 editor.commands.addCommand({
     name: 'execLine',
@@ -139,22 +165,30 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         if (theRange.start.column === theRange.end.column &&
             theRange.start.row === theRange.end.row) {
             sel = theRange
+            sel.start.column = 0
+            var theLine = editor.session.doc.getLine(sel.start.row)
+            sel.end.column = theLine.length
         } else { //else multiline selection
             sel = theRange
             sel.start.column = 0
             sel.end.column = 1
+            var theLine = editor.session.doc.getLine(sel.end.row)
+                sel.end.column = theLine.length
+                
         }
-        var lines = editor.session.doc.getLines(sel.start.row, sel.end.row)
-        theCode = lines.join(editor.session.doc.getNewLineCharacter())
+        // whichLanguage(sel)
     } else { // is block execution
         sel = theRange
         sel.start.column = 0
-        sel.end.column = 0
+        sel.end.column = 1
 
         while (sel.start.row > 0) {
             var lineStart = editor.session.doc.getLine(sel.start.row)
             var resultStart = endExp.exec(lineStart)
-            if (resultStart !== null || "" === lineStart ) {
+            if(null !== /\s*\/+/i.exec(lineStart)) {
+                sel.start.row += 1
+                break
+            } else if (resultStart !== null || "" === lineStart) {
                 sel.start.row += 1
                 break
             }
@@ -168,29 +202,43 @@ editor.runTidal = function(theRange, execType, theLanguage) {
             // if (lineEnd.length === 0 || !lineEnd.trim()) {
             var resultStart = endExp.exec(lineEnd)
             if (resultStart !== null || "" === lineEnd) {
+                sel.end.row -= 1
+                var theLine = editor.session.doc.getLine(sel.end.row)
+                sel.end.column = theLine.length
                 break
-            }
+            } 
             sel.end.row += 1
         }
-
-        var lines = editor.session.doc.getLines(sel.start.row, sel.end.row)
-        theCode = lines.join(editor.session.doc.getNewLineCharacter())
-        // for highlighting
-        // sel.end.row -= 1
     }
 
-    //TODO:: needed? 
-    // sel.clipRows = function() {
-    //     var range
-    //     range = Range.prototype.clipRows.apply(this, arguments)
-    //     range.isEmpty = function() {
-    //         return false
-    //     }
-    //     return range
-    // }
+    whichLanguage(sel)
+    var lines = editor.session.doc.getLines(sel.start.row, sel.end.row)
+    theCode = lines.join(editor.session.doc.getNewLineCharacter())
 
-    //determine which language
-    var langRange = JSON.parse(JSON.stringify(sel));
+    var id = editor.session.addMarker(sel, 'execHighlight', 'text')
+    mExecs.push(id)
+    mExecTimer = setTimeout(clearExecHighLighting, 550)
+
+    //start saving for NN
+    var timeStamp = Date.now() - NNStartTime
+    var index = NNSave.length
+    if (index > 0) {
+        NNDeltaTime = timeStamp - NNSave[index-1].t
+    }
+    NNSave[index] = {
+        'l': mLanguage,
+        't': timeStamp,
+        'd': NNDeltaTime,
+        'c': theCode
+    }
+    //end saving for NN
+
+
+    ipcRenderer.send(mLanguage, theCode)
+}
+
+function whichLanguage(aRange) {
+    var langRange = JSON.parse(JSON.stringify(aRange));
     var isComment = /\s*\/+/i
     var isPython = /\s*\/+\s*python/i
     var isTidal = /\s*\/+\s*tidal/i
@@ -202,27 +250,21 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         if (null !== isComment.exec(theLine)) {
             if (null !== isPython.exec(theLine)) {
                 mLanguage = 'python'
-                break
+                return true
             } else if (null !== isTidal.exec(theLine)) {
                 mLanguage = 'tidal'
-                break
+                return true
             } else if (null !== isLua.exec(theLine)) {
                 mLanguage = 'lua'
-                break
-            }else if (null !== isGLSL.exec(theLine)) {
+                return true
+            } else if (null !== isGLSL.exec(theLine)) {
                 mLanguage = 'glsl'
-                break
+                return true
             }
         }
         langRange.start.row -= 1
     }
-
-    var id = editor.session.addMarker(sel, 'execHighlight', 'text')
-    mExecs.push(id)
-    mExecTimer = setTimeout(clearExecHighLighting, 550)
-
-    
-    ipcRenderer.send(mLanguage, theCode)
+    return false
 }
 
 function clearExecHighLighting() {
