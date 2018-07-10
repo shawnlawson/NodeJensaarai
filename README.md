@@ -5,7 +5,9 @@
 ## Requirements
 Doing the electron rebuild from the OSC page
 https://github.com/colinbdclark/osc.js
+
 to here
+
 https://github.com/node-serialport/node-serialport#electron
 
 ## Usage
@@ -36,4 +38,5 @@ d1 $ sound "bd"
 
 ### Saving Executions
 CTRL+SHIFT+S 
+
 COMMAND+SHIFT+S

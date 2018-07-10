@@ -183,7 +183,7 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         while (sel.start.row > 0) {
             var lineStart = editor.session.doc.getLine(sel.start.row)
             var resultStart = endExp.exec(lineStart)
-            if(null !== /\s*\/+/i.exec(lineStart)) { //comment line?
+            if(null !== /\s*\/{2,}/i.exec(lineStart)) { //comment line?
                 sel.start.row += 1
                 break
             } else if (resultStart !== null || "" === lineStart) {
@@ -236,11 +236,11 @@ editor.runTidal = function(theRange, execType, theLanguage) {
 
 function whichLanguage(aRange) {
     var langRange = JSON.parse(JSON.stringify(aRange));
-    var isComment = /\s*\/+/i
-    var isPython = /\s*\/+\s*python/i
-    var isTidal = /\s*\/+\s*tidal/i
-    var isLua = /\s*\/+\s*lua/i
-    var isGLSL = /\s*\/+\s*glsl/i
+    var isComment = /\s*\/{2,}/i
+    var isPython = /\s*\/{2,}\s*python/i
+    var isTidal = /\s*\/{2,}\s*tidal/i
+    var isLua = /\s*\/{2,}\s*lua/i
+    var isGLSL = /\s*\/{2,}\s*glsl/i
 
     while (langRange.start.row >= 0) {
         var theLine = editor.session.doc.getLine(langRange.start.row)
