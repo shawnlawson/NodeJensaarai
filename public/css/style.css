@@ -30,7 +30,8 @@ body {
 #feedback {
     position: absolute;
     background: transparent;
-    height: 200px;
+    max-height: 150px;
+    height: 25%;
     left: 0px;
     bottom: 0px;
     right: 0px;

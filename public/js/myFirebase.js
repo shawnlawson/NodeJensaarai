@@ -73,7 +73,7 @@ function createFirepad (isNew) {
        // record other user code executions
       editor.livewriting('record', data.val().range, data.val().exec, data.val().language)
       // run other user code executions
-      editor.runTidal(data.val().range, data.val().exec, data.val().language)
+      editor.runCode(data.val().range, data.val().exec, data.val().language)
       // delete the message
       audioMessageRef.child(data.key).remove()
     }

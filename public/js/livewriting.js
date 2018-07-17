@@ -186,7 +186,7 @@ var livewriting = (function ($) {
       // START adding tidal execute
       else if (event.p === 'e') {
         // TODO:: let this call an exec function from event.l for language
-        this.runTidal(event.d, event.a)
+        this.runCode(event.d, event.a)
       }
       // END adding tidal execute
       if (reverse) {

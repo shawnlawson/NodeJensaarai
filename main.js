@@ -20,9 +20,12 @@ Functions for Electron Creation
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1000,
     height: 600,
-    transparent: true
+    transparent: true,
+    frame: true,
+    toolbar: true,
+    hasShadow: false
   })
 
   mainWindow.setMenu(null)

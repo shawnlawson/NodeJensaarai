@@ -73,27 +73,20 @@ function sendUpdateWindow(data) {
   // Incoming
   ///////////////////////////////////////////////////////////////////
 ipcRenderer.on('feedback', (event, arg) => {
-  if (arg.type === 'tidal') {
-    var l = feedback.session.getLength()
-    feedback.session.insert({
-      row: l,
-      column: 0
-    }, arg.msg + '\n')
-    if (l > 400) {
-      feedback.session.removeLines(0, 100)
-    }
-    feedback.scrollToLine(l, false, true, function () {})
-    feedback.session.selection.clearSelection()
-  } else if (arg.type === 'python') {
-    var l = feedback.session.getLength()
-    feedback.session.insert({
-      row: l,
-      column: 0
-    }, arg.msg + '\n')
-    if (l > 400) {
-      feedback.session.removeLines(0, 100)
-    }
-    feedback.scrollToLine(l, false, true, function () {})
-    feedback.session.selection.clearSelection()
+  feedback.setValue(arg.msg, 1)
+  // if (arg.type === 'tidal') {
+  //   var l = feedback.session.getLength()
+  //   feedback.session.insert({
+  //     row: l,
+  //     column: 0
+  //   }, arg.msg + '\n')
+  //   if (l > 400) {
+  //     feedback.session.removeLines(0, 100)
+  //   }
+  //   feedback.scrollToLine(l, false, true, function () {})
+  //   feedback.session.selection.clearSelection()
+  // } else
+   if (arg.type === 'glsl') {
+    setLineErrors(arg.msg, 49)
   }
 })

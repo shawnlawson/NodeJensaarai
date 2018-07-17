@@ -53,6 +53,6 @@ ipcRenderer.on('change', (event, arg) => {
     }
   } else if (arg.p === 'e') {
     console.log(arg)
-    editor.runTidal(arg.d, arg.a)
+    editor.runCode(arg.d, arg.a)
   }
 })

@@ -9,29 +9,6 @@ var NNSave = []
 var NNStartTime = Date.now()
 var NNDeltaTime = 0
 
-function setShaderFromEditor() {
-    var rawCode = editor.session.doc.getAllLines()
-    var rawCodeLength = rawCode.length
-    var cleanCode = ''
-    var startExp = /(?:\h?[d][1-8]|\h?hush|\h?let|\h?bps)/ig
-    var i = 0
-    while (i < rawCodeLength) {
-        var resultStart = startExp.exec(rawCode[i])
-        if (resultStart !== null) {
-            while (i < rawCodeLength - 1) {
-                cleanCode += '\n'
-                i++
-                if (rawCode[i].length === 0 || !rawCode[i].trim()) {
-                    break
-                }
-            }
-        } else {
-            cleanCode += rawCode[i] + '\n'
-            i++
-        }
-    }
-}
-
 function setLineErrors(result, lineOffset) {
     while (mErrors.length > 0) {
         var mark = mErrors.pop()
@@ -40,9 +17,7 @@ function setLineErrors(result, lineOffset) {
 
     editor.session.clearAnnotations()
 
-    if (result.mSuccess === false) {
-        // var lineOffset = getHeaderSize();
-        var lines = result.mInfo.match(/^.*((\r\n|\n|\r)|$)/gm)
+        var lines = result.match(/^.*((\r\n|\n|\r)|$)/gm)
         var tAnnotations = []
         for (var i = 0; i < lines.length; i++) {
             var parts = lines[i].split(':')
@@ -54,17 +29,22 @@ function setLineErrors(result, lineOffset) {
                 annotation.type = 'error'
 
                 if (debugging) { tAnnotations.push(annotation) }
-
-                var id = editor.session.addMarker(new Range(annotation.row, 0, annotation.row, 1), 'errorHighlight', 'text', false)
+                var theLine = editor.session.doc.getLine(annotation.row)
+                var id = editor.session.addMarker(new Range(annotation.row, 
+                                                            0, 
+                                                            annotation.row, 
+                                                            theLine.length), 
+                                                  'errorHighlight', 
+                                                  'text', 
+                                                  false)
                 mErrors.push(id)
             }
         }
 
         if (debugging) {
-            console.log(result.mInfo)
+            // console.log(result)
             editor.session.setAnnotations(tAnnotations)
         }
-    }
 }
 
 /// /////////////////////////////////
@@ -102,7 +82,7 @@ editor.setOptions({
 editor.livewriting = livewriting
 editor.livewriting('create', 'ace', {}, '')
 
-//start NN save Command
+
 editor.commands.addCommand({
     name: 'saveForNN',
     bindKey: {
@@ -122,9 +102,7 @@ editor.commands.addCommand({
         }
     }
 })
-//end NN save Command
 
-//TODO:: need to get correct language in
 editor.commands.addCommand({
     name: 'execLine',
     bindKey: {
@@ -132,10 +110,17 @@ editor.commands.addCommand({
         mac: 'Shift-Return'
     },
     exec: function() {
+        var tempLang = whichLanguage(editor.session.selection.getRange())
         if (firepad !== null) {
-            audioMessageRef.push({ author: userId, exec: 'execLine', range: editor.session.selection.getRange(), backwards: editor.session.selection.isBackwards() + 0, language: mLanguage })
+            audioMessageRef.push({ author: userId, 
+                                   exec: 'execLine', 
+                                   range: editor.session.selection.getRange(), 
+                                   backwards: editor.session.selection.isBackwards() + 0, 
+                                   language: tempLang })
         }
-        editor.runTidal(editor.session.selection.getRange(), 'execLine', null)
+        editor.runCode(editor.session.selection.getRange(), 
+                       'execLine', 
+                       tempLang)
     }
 })
 
@@ -146,72 +131,151 @@ editor.commands.addCommand({
         mac: 'Command-Return'
     },
     exec: function() {
+        var tempLang = whichLanguage(editor.session.selection.getRange())
         if (firepad !== null) {
-            audioMessageRef.push({ author: userId, exec: 'execBlock', range: editor.session.selection.getRange(), backwards: editor.session.selection.isBackwards() + 0, language: mLanguage })
+            audioMessageRef.push({ author: userId, 
+                                   exec: 'execBlock', 
+                                   range: editor.session.selection.getRange(), 
+                                   backwards: editor.session.selection.isBackwards() + 0, 
+                                   language: tempLang })
         }
-        editor.runTidal(editor.session.selection.getRange(), 'execBlock', null)
+        editor.runCode(editor.session.selection.getRange(), 
+                       'execBlock', 
+                       tempLang)
     }
 })
 
 //called locally, from firebase remote, and livewriting playback
-editor.runTidal = function(theRange, execType, theLanguage) {
+editor.runCode = function(theRange, execType, theLanguage) {
     var theCode = ''
-    var sel = new Range()
-    var endExp = /(?:^\s*$)/gm
+    var sel = JSON.parse(JSON.stringify(theRange));
+    var isWhiteSpace = /^\s*$/m
+    // var isComment = /\s*\/{2,}/i
+    var isPython = /\s*\/{2,}\s*python/i
+    var isTidal = /\s*\/{2,}\s*tidal/i
+    var isLua = /\s*\/{2,}\s*lua/i
+    var isGLSL = /\s*\/{2,}\s*glsl/i
+    var isLangTag = /^\s*\/{2,}\s*(python|tidal|lua|glsl)$/mi
     var myCursor = editor.session.selection.getCursor()
 
+//TODO:: change to not set global lang choice?
+/*
+python up to tag down to empty line
+tidal up to tag down to empty line
+lua up to tag down to closing block...? count end's and open conditions?
+glsl whole file, or auto
+
+*/
     if (execType === 'execLine') {
         //if single line and nothing selected
         if (theRange.start.column === theRange.end.column &&
             theRange.start.row === theRange.end.row) {
-            sel = theRange
             sel.start.column = 0
             var theLine = editor.session.doc.getLine(sel.start.row)
             sel.end.column = theLine.length
         } else { //else multiline selection
-            sel = theRange
             sel.start.column = 0
             sel.end.column = 1
             var theLine = editor.session.doc.getLine(sel.end.row)
             sel.end.column = theLine.length    
         }
+
     } else { // is block execution
-        sel = theRange
         sel.start.column = 0
         sel.end.column = 1
 
-        while (sel.start.row > 0) {
-            var lineStart = editor.session.doc.getLine(sel.start.row)
-            var resultStart = endExp.exec(lineStart)
-            if(null !== /\s*\/{2,}/i.exec(lineStart)) { //comment line?
-                sel.start.row += 1
-                break
-            } else if (resultStart !== null || "" === lineStart) {
-                sel.start.row += 1
-                break
+        // get start of bock basd on language
+        if (theLanguage === 'tidal') {
+            while (sel.start.row > 0) {
+                var lineStart = editor.session.doc.getLine(sel.start.row)
+                if(null !== isTidal.exec(lineStart) ||
+                   null !==  isWhiteSpace.exec(lineStart) || 
+                   "" === lineStart) {
+                    sel.start.row += 1
+                    break
+                }
+                sel.start.row -= 1
             }
-            sel.start.row -= 1
+        } else if (theLanguage === 'python' ||
+                   theLanguage === 'lua') {
+            while (sel.start.row > 0) {
+                var lineStart = editor.session.doc.getLine(sel.start.row)
+                //TODO:: for now must have empty lines not counting tabs over
+                if(null !== isPython.exec(lineStart) || 
+                   "" === lineStart) {
+                    sel.start.row += 1
+                    break
+                }
+                sel.start.row -= 1
+            }
+        } else if (theLanguage === 'glsl') {
+            while (sel.start.row > 0) {
+                var lineStart = editor.session.doc.getLine(sel.start.row)
+                if(null !== isGLSL.exec(lineStart)) {
+                    sel.start.row += 1
+                    break
+                }
+                sel.start.row -= 1
+            }
         }
 
+        //get end of block based on language
         var lastLine = editor.session.doc.getLength()
-
-        while (sel.end.row < lastLine) {
-            var lineEnd = editor.session.doc.getLine(sel.end.row)
-            // if (lineEnd.length === 0 || !lineEnd.trim()) {
-            var resultStart = endExp.exec(lineEnd)
-            if (resultStart !== null || "" === lineEnd) {
-                sel.end.row -= 1
-                var theLine = editor.session.doc.getLine(sel.end.row)
-                sel.end.column = theLine.length
-                break
-            } 
-            sel.end.row += 1
+        // if (lineEnd.length === 0 || !lineEnd.trim()) { //helpful?
+        if (theLanguage === 'tidal') {
+            while (sel.end.row < lastLine) {
+                var lineEnd = editor.session.doc.getLine(sel.end.row)
+                
+                if (null !==  isWhiteSpace.exec(lineEnd) ||
+                    "" === lineEnd ||
+                    null !== isLangTag.exec(lineEnd)) {
+                    sel.end.row -= 1
+                    var theLine = editor.session.doc.getLine(sel.end.row)
+                    sel.end.column = theLine.length
+                    break
+                } 
+                sel.end.row += 1
+            }
+        } else if (theLanguage === 'python' ||
+                   theLanguage === 'lua') {
+            while (sel.end.row < lastLine) {
+                var lineEnd = editor.session.doc.getLine(sel.end.row)
+                //TODO:: for now must have empty lines not counting tabs over
+                if ("" === lineEnd ||
+                    null !== isLangTag.exec(lineEnd)) {
+                    sel.end.row -= 1
+                    var theLine = editor.session.doc.getLine(sel.end.row)
+                    sel.end.column = theLine.length
+                    break
+                } 
+                sel.end.row += 1
+            }
+        } else if (theLanguage === 'glsl') {
+            while (sel.end.row < lastLine) {
+                var lineEnd = editor.session.doc.getLine(sel.end.row)
+                if (null !== isLangTag.exec(lineEnd)) {
+                    sel.end.row -= 1
+                    var theLine = editor.session.doc.getLine(sel.end.row)
+                    sel.end.column = theLine.length
+                    break
+                } 
+                sel.end.row += 1
+            }
         }
+
     }
 
-    whichLanguage(sel)
     var lines = editor.session.doc.getLines(sel.start.row, sel.end.row)
     theCode = lines.join(editor.session.doc.getNewLineCharacter())
+
+    sel.clipRows = function () {
+        var range
+        range = Range.prototype.clipRows.apply(this, arguments)
+        range.isEmpty = function () {
+          return false
+        }
+        return range
+    }
 
     var id = editor.session.addMarker(sel, 'execHighlight', 'text')
     mExecs.push(id)
@@ -224,19 +288,19 @@ editor.runTidal = function(theRange, execType, theLanguage) {
         NNDeltaTime = timeStamp - NNSave[index-1].t
     }
     NNSave[index] = {
-        'l': mLanguage,
+        'l': theLanguage,
         't': timeStamp,
         'd': NNDeltaTime,
         'c': theCode
     }
     //end saving for NN
 
-    ipcRenderer.send(mLanguage, theCode)
+    ipcRenderer.send(theLanguage, theCode)
 }
 
 function whichLanguage(aRange) {
     var langRange = JSON.parse(JSON.stringify(aRange));
-    var isComment = /\s*\/{2,}/i
+    // var isComment = /\s*\/{2,}/i
     var isPython = /\s*\/{2,}\s*python/i
     var isTidal = /\s*\/{2,}\s*tidal/i
     var isLua = /\s*\/{2,}\s*lua/i
@@ -244,24 +308,20 @@ function whichLanguage(aRange) {
 
     while (langRange.start.row >= 0) {
         var theLine = editor.session.doc.getLine(langRange.start.row)
-        if (null !== isComment.exec(theLine)) {
+        // if (null !== isComment.exec(theLine)) {
             if (null !== isPython.exec(theLine)) {
-                mLanguage = 'python'
-                return true
+                return 'python'
             } else if (null !== isTidal.exec(theLine)) {
-                mLanguage = 'tidal'
-                return true
+                return 'tidal'
             } else if (null !== isLua.exec(theLine)) {
-                mLanguage = 'lua'
-                return true
+                return 'lua'
             } else if (null !== isGLSL.exec(theLine)) {
-                mLanguage = 'glsl'
-                return true
+                return 'glsl'
             }
-        }
+        // }
         langRange.start.row -= 1
     }
-    return false
+    return null
 }
 
 function clearExecHighLighting() {

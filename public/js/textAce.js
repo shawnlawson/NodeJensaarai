@@ -68,7 +68,7 @@ editor.setOptions({
 
 var delay
 
-editor.runTidal = function (theRange, execType) {
+editor.runCode = function (theRange, execType) {
   var theCode = ''
   var sel = new Range()
   var startExp = /(?:\h?[d][1-8]|\h?hush|\h?let|\h?bps|\v)/ig
