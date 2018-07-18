@@ -74,7 +74,7 @@ editor.runCode = function (theRange, execType) {
   var startExp = /(?:\h?[d][1-8]|\h?hush|\h?let|\h?bps|\v)/ig
   var endExp = /\v/gi
   var myCursor = editor.session.selection.getCursor()
-//TODO may need to update this
+//TODO:: need to update this!!
   if (execType === 'execLine') {
     sel = theRange
     sel.start.column = 0

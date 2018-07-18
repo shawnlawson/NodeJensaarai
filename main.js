@@ -108,7 +108,7 @@ ipcMain.on('change', (event, arg) => {
 ipcMain.on('python', (event, arg) => {
   console.log(arg)
   udpPort.send({
-    address: '/command',
+    address: '/python',
     args: [arg]
   }, '127.0.0.1', outPythonPort)
 })

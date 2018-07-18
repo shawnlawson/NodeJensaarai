@@ -59,18 +59,12 @@ var livewriting = (function ($) {
         }
       }
     },
-    execAceFunc = function (type, editor, r = null, lang) {
+    execAceFunc = function (type, editor, r, lang) {
       if (type === 'execLine' || type === 'execBlock') {
         var it = editor
         var timestamp = Date.now() - it.lw_startTime
         var index = it.lw_liveWritingJsonData.length
-
-        if (r === null) {
-          it.lw_liveWritingJsonData[index] = {'p': 'e', 't': timestamp, 'a': type, 'd': editor.session.selection.getRange(), 'l': lang}
-        } else {
-          it.lw_liveWritingJsonData[index] = {'p': 'e', 't': timestamp, 'a': type, 'd': r, 'l': lang}
-        }
-
+        it.lw_liveWritingJsonData[index] = {'p': 'e', 't': timestamp, 'a': type, 'd': r, 'l': lang}
         if (DEBUG)console.log('executing line event:' + JSON.stringify(it.lw_liveWritingJsonData[index]) + ' time:' + timestamp)
       }
     },
@@ -183,12 +177,12 @@ var livewriting = (function ($) {
           if (DEBUG) alert('unknown scroll type for ace editor: ' + event['y'])
         }
       }
-      // START adding tidal execute
+      // START adding code execute
       else if (event.p === 'e') {
         // TODO:: let this call an exec function from event.l for language
-        this.runCode(event.d, event.a)
+        this.runCode(event.d, event.a, event.l)
       }
-      // END adding tidal execute
+      // END adding code execute
       if (reverse) {
         this.lw_data_index--
       } else {
@@ -496,7 +490,7 @@ var livewriting = (function ($) {
         return remoteCursorFunc(it)
       })
       it.commands.on('afterExec', function (event) {
-        execAceFunc(event.command.name, it)
+        execAceFunc(event.command.name, it, editor.session.selection.getRange(), mLanguage)
       })
       // END
       it.session.on('changeScrollLeft', function (number) {

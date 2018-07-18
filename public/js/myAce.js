@@ -296,6 +296,7 @@ glsl whole file, or auto
     //end saving for NN
 
     ipcRenderer.send(theLanguage, theCode)
+    mLanguage = theLanguage //needed for second window to know which language?
 }
 
 function whichLanguage(aRange) {
