@@ -1,11 +1,12 @@
 {
-  "name": "TheGreyCode",
+  "name": "Jensaarai",
   "version": "1.0.0",
   "description": "What exists between The Force and The Dark Side",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "install": "electron-rebuild"
+    "install": "electron-rebuild",
+    "build-darwin": "electron-packager . Jensaarai --platform=darwin --overwrite"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,6 +18,12 @@
   ],
   "author": "Shawn lawson",
   "license": "CC0-1.0",
+  "build": {
+    "appId": "lawson_45368",
+    "mac": {
+      "category": "your.app.category.type"
+    }
+  },
   "standard": {
     "globals": [
       "$"
@@ -24,9 +31,11 @@
   },
   "devDependencies": {
     "electron": "^1.7.8",
+    "electron-packager": "^12.1.0",
     "electron-rebuild": "^1.7.3"
   },
   "dependencies": {
+    "electron-debug": "^2.0.0",
     "firebase": "^5.0.4",
     "firebase-token-generator": "^2.0.0",
     "firepad": "^1.4.0",

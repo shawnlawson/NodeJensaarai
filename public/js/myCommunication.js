@@ -74,7 +74,7 @@ function sendUpdateWindow(data) {
   ///////////////////////////////////////////////////////////////////
 ipcRenderer.on('feedback', (event, arg) => {
   feedback.setValue(arg.msg, 1)
-  // if (arg.type === 'tidal') {
+   if (arg.type === 'tidal') {
   //   var l = feedback.session.getLength()
   //   feedback.session.insert({
   //     row: l,
@@ -85,8 +85,8 @@ ipcRenderer.on('feedback', (event, arg) => {
   //   }
   //   feedback.scrollToLine(l, false, true, function () {})
   //   feedback.session.selection.clearSelection()
-  // } else
-   if (arg.type === 'glsl') {
+  } else if (arg.type === 'glsl') {
     setLineErrors(arg.msg, 49)
   }
 })
+

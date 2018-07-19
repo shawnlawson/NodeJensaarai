@@ -2,6 +2,8 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
+// require('electron-debug')({showDevTools: true, enabled: true})
+
 const path = require('path')
 const url = require('url')
 const {ipcMain} = require('electron')
@@ -9,9 +11,9 @@ const osc = require('osc')
 
 let mainWindow, textWindow
 let outPythonPort = 7777, 
-    outTidalPort = 7778, 
-    outLuaPort = 7779, 
-    outGLSLPort = 7780, 
+    outTidalPort = 7777, 
+    outLuaPort = 7777, 
+    outGLSLPort = 7777, 
     inAllPort = 8888
 
 /*************************
@@ -176,7 +178,8 @@ udpPort.on('bundle', function (oscBundle, timeTag, info) {
 })
 
 udpPort.on('message', function (oscMsg) {
- //console.log('An OSC Message was received!', oscMsg.args[0])
+ // console.log('An OSC Message was received!', oscMsg.args[0])
+ if (mainWindow)
   if (oscMsg.address === '/tidal_feedback') {
     mainWindow.webContents.send('feedback', {
       type: 'tidal',

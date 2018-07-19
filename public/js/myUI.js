@@ -58,7 +58,9 @@ $(document)
         $('#autoComplete')
           .button()
           .bind('change', function(event) {
-            enableLiveAutocompletion: !editor.getOptions().enableLiveAutocompletion
+            editor.setOptions({
+                enableLiveAutocompletion: !editor.getOptions().enableLiveAutocompletion
+            })
             this.blur()
           })
 
@@ -235,3 +237,4 @@ function addStyleRule(css) {
     editor.addedStyleRules[css] = true
     return editor.addedStyleSheet.insertRule(css, 0)
 }
+
