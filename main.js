@@ -164,6 +164,10 @@ ipcMain.on('window', (event, arg) => {
     textWindow.hide() 
 })
 
+ipcMain.on('highlighting', (event, arg) => {
+  if (textWindow) { textWindow.webContents.send('highlighting', arg) }
+})
+
 /*************************
 OSC functions
 *************************/

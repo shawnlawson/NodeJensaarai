@@ -31,38 +31,40 @@ $(document)
                 position: { collision: 'flip' }
             })
             .on('selectmenuchange', function(event, data) {
-              var rgbaCol = 'rgba(0, 0, 0, '+ parseFloat(data.item.value)+')';
-              $('html, body').css('background', rgbaCol)
-              this.blur()
+                var rgbaCol = 'rgba(0, 0, 0, ' + parseFloat(data.item.value) + ')';
+                $('html, body').css('background', rgbaCol)
+                this.blur()
             })
 
         $('#selectHighlighting')
-          .selectmenu({
-              width: 'auto',
-              position: { collision: 'flip' }
-          })
-          .on('selectmenuchange', function(event, data) {
-            if (data.item.value === 'none') 
-              editor.session.setMode('') //TODO is this ok?
-            else if (data.item.value === 'glsl') 
-              editor.session.setMode('ace/mode/glsl')
-            else if (data.item.value === 'tidal') 
-              editor.session.setMode('ace/mode/haskell')
-            else if (data.item.value === 'python') 
-              editor.session.setMode('ace/mode/python')
-            else if (data.item.value === 'lua') 
-              editor.session.setMode('ace/mode/lua')
-            this.blur()
-          })
+            .selectmenu({
+                width: 'auto',
+                position: { collision: 'flip' }
+            })
+            .on('selectmenuchange', function(event, data) {
+                if (data.item.value === 'none')
+                    editor.session.setMode('') //TODO is this ok?
+                else if (data.item.value === 'glsl')
+                    editor.session.setMode('ace/mode/glsl')
+                else if (data.item.value === 'tidal')
+                    editor.session.setMode('ace/mode/haskell')
+                else if (data.item.value === 'python')
+                    editor.session.setMode('ace/mode/python')
+                else if (data.item.value === 'lua')
+                    editor.session.setMode('ace/mode/lua')
+
+                sendNewHighlighting(data.item.value)
+                this.blur()
+            })
 
         $('#autoComplete')
-          .button()
-          .bind('change', function(event) {
-            editor.setOptions({
-                enableLiveAutocompletion: !editor.getOptions().enableLiveAutocompletion
+            .button()
+            .bind('change', function(event) {
+                editor.setOptions({
+                    enableLiveAutocompletion: !editor.getOptions().enableLiveAutocompletion
+                })
+                this.blur()
             })
-            this.blur()
-          })
 
         $('#debug')
             .button()
@@ -126,11 +128,11 @@ $(document)
             .button()
             .click(function(event) {
                 var data = {
-                    'python': parseInt( $('#python_send').val() ),
-                    'tidal': parseInt( $('#tidal_send').val() ),
-                    'lua': parseInt( $('#lua_send').val() ),
-                    'glsl': parseInt( $('#glsl_send').val() ),
-                    'receive': parseInt( $('#all_receive').val() )
+                    'python': parseInt($('#python_send').val()),
+                    'tidal': parseInt($('#tidal_send').val()),
+                    'lua': parseInt($('#lua_send').val()),
+                    'glsl': parseInt($('#glsl_send').val()),
+                    'receive': parseInt($('#all_receive').val())
                 }
                 sendNewOSCPorts(data)
             })
@@ -237,4 +239,3 @@ function addStyleRule(css) {
     editor.addedStyleRules[css] = true
     return editor.addedStyleSheet.insertRule(css, 0)
 }
-

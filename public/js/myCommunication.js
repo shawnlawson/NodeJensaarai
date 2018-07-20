@@ -69,6 +69,10 @@ function sendUpdateWindow(data) {
   ipcRenderer.send('window', data)
 }
 
+function sendNewHighlighting(data) {
+  ipcRenderer.send('highlighting', data)
+}
+
   ///////////////////////////////////////////////////////////////////
   // Incoming
   ///////////////////////////////////////////////////////////////////

@@ -100,8 +100,8 @@ snippet try Try/Except/Else/Finally\n\
 		${5:# TODO: write code...}\n\
 	finally:\n\
 		${6:# TODO: write code...}\n\
-snippet pprint\n\
-	pprint.pprint(${1})${2}\n\
+snippet pp\n\
+	print(pformat(${1}.pars()))${2}\n\
 ## Touch Designer Quick Functions\n\
 #connect\n\
 snippet ->>\n\
