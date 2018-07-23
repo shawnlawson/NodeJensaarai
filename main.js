@@ -16,6 +16,9 @@ let outPythonPort = 7777,
     outGLSLPort = 7777, 
     inAllPort = 8888
 
+let extraIP = "192.168.1.10"
+let extraSend = false
+
 /*************************
 Functions for Electron Creation
 *************************/
@@ -121,6 +124,13 @@ ipcMain.on('tidal', (event, arg) => {
     address: '/tidal',
     args: [arg + '\n']
   }, '127.0.0.1', outTidalPort)
+  
+  if(true === extraSend){
+      udpPort.send({
+      address: '/tidal',
+      args: [arg + '\n']
+    }, extraIP, outTidalPort)
+  }
 })
 
 ipcMain.on('lua', (event, arg) => {
