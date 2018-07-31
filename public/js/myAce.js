@@ -186,7 +186,7 @@ glsl whole file, or auto
 
         // get start of bock basd on language
         if (theLanguage === 'tidal') {
-            while (sel.start.row > 0) {
+            while (sel.start.row >= 0) {
                 var lineStart = editor.session.doc.getLine(sel.start.row)
                 if(null !== isTidal.exec(lineStart) ||
                    null !==  isWhiteSpace.exec(lineStart) || 
@@ -198,7 +198,7 @@ glsl whole file, or auto
             }
         } else if (theLanguage === 'python' ||
                    theLanguage === 'lua') {
-            while (sel.start.row > 0) {
+            while (sel.start.row >= 0) {
                 var lineStart = editor.session.doc.getLine(sel.start.row)
                 //TODO:: for now must have empty lines not counting tabs over
                 if(null !== isPython.exec(lineStart) || 
@@ -209,7 +209,7 @@ glsl whole file, or auto
                 sel.start.row -= 1
             }
         } else if (theLanguage === 'glsl') {
-            while (sel.start.row > 0) {
+            while (sel.start.row >= 0) {
                 var lineStart = editor.session.doc.getLine(sel.start.row)
                 if(null !== isGLSL.exec(lineStart)) {
                     sel.start.row += 1

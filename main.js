@@ -54,6 +54,7 @@ function createWindow () {
 
 function createOutputWindow () {
   let displays = electron.screen.getAllDisplays()
+  // console.log(displays)
   let extraDisplays = displays.find((display) => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   })
