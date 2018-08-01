@@ -146,7 +146,12 @@ $(document)
 
         $('#myFile')
             .change(function(event) {
-                openFile(event)
+                openFile(event, "live")
+            })
+
+        $('#edFile')
+            .change(function(event) {
+                openFile(event, "editor")
             })
 
         $('#saveFile')
@@ -201,24 +206,32 @@ $(document)
         event.preventDefault()
     })
 
-function openFile(event) {
+function openFile(event, who) {
     var file
-    if (event.target.files) { file = event.target.files } else { file = event.dataTransfer.files }
+    if (event.target.files) { 
+        file = event.target.files 
+    } else { 
+        file = event.dataTransfer.files 
+    }
+    
     var f
     var numFiles = file.length
     for (var i = 0; f = file[i]; i++) {
-        if (f.name.slice(-4) === '.txt') {
+        // if (f.name.slice(-4) === '.txt') {
             var reader = new FileReader()
 
             reader.onload = (function(theFile) {
                 return function(e) {
-                    editor.livewriting('playJson', reader.result)
-                    // editor.setValue(reader.result, -1)
+                    if (who === "live") {
+                        editor.livewriting('playJson', reader.result)
+                    } else if( who === "editor") {
+                        editor.setValue(reader.result, -1)
+                    }
                 }
             })(f)
 
             reader.readAsText(f, 'text/plain;charset=utf-8')
-        }
+        // }
     }
 }
 

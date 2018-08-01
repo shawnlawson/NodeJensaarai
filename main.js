@@ -29,7 +29,6 @@ function createWindow () {
     height: 600,
     transparent: true,
     frame: true,
-    toolbar: true,
     hasShadow: false
   })
 

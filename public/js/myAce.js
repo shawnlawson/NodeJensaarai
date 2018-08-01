@@ -82,6 +82,17 @@ editor.setOptions({
 editor.livewriting = livewriting
 editor.livewriting('create', 'ace', {}, '')
 
+editor.commands.addCommand({
+    name: 'openFile',
+    bindKey: {
+        win: 'Ctrl-O',
+        mac: 'Command-O'
+    },
+    exec: function() {
+         $('#edFile').trigger('click')
+    }
+})
+
 
 editor.commands.addCommand({
     name: 'saveForNN',
