@@ -150,10 +150,10 @@ animation-duration: .3s;\
 }\
 .ace_scroller{\
   cursor: url('../images/cursor.png') 1 8, text;\
+}\
+.ace_hidden-cursors .ace_cursor {\
+  opacity: 1.0;\
 }";
-
-
-
 
 var dom = require("../lib/dom");
 dom.importCssString(exports.cssText, exports.cssClass);

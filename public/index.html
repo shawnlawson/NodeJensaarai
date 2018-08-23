@@ -11,6 +11,9 @@
 </head>
 
 <body>
+    <!-- graph ==================================== -->
+    <div id="cy"></div>
+    
     <!-- editors ==================================== -->
     <div id="editor"></div>
     <div id="feedback"></div>
@@ -123,7 +126,10 @@
     </div>
 </body>
 <script type="text/javascript" src="lib/firebase.js"></script>
-<script> window.$ = window.jQuery = require('jquery') </script>
+<script> window.$ = window.jQuery = require('jquery')
+         window.cytoscape = require('cytoscape') 
+         window.dagre = require('cytoscape-dagre') 
+         cytoscape.use(dagre) </script>
 <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="lib/ace/ace.js"></script>
 <script type="text/javascript" src="lib/ace/ext-language_tools.js"></script>

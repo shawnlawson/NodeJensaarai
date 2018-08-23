@@ -111,7 +111,7 @@ ipcMain.on('change', (event, arg) => {
 })
 
 ipcMain.on('python', (event, arg) => {
-  console.log(arg)
+  // console.log(arg)
   udpPort.send({
     address: '/python',
     args: [arg]
@@ -192,15 +192,45 @@ udpPort.on('bundle', function (oscBundle, timeTag, info) {
 })
 
 udpPort.on('message', function (oscMsg) {
- // console.log('An OSC Message was received!', oscMsg.args[0])
+ // console.log('An OSC Message was received!', oscMsg)
  if (mainWindow)
   if (oscMsg.address === '/tidal_feedback') {
     mainWindow.webContents.send('feedback', {
       type: 'tidal',
       msg: oscMsg.args[0]
     })
+  } else if (oscMsg.address === '/tidal_rewrite') {
+    mainWindow.webContents.send('tidal_rewrite', {
+      type: 'tidal', 
+      msg: oscMsg.args[0]
+    })
   } else if (oscMsg.address === '/python_feedback') {
     mainWindow.webContents.send('feedback', {
+      type: 'python',
+      msg: oscMsg.args[0]
+    })
+  } else if (oscMsg.address === '/python_graph') {
+    mainWindow.webContents.send('graph', {
+      type: 'python',
+      msg: oscMsg.args[0]
+    })
+  } else if (oscMsg.address === '/python_graph/destroy') {
+    mainWindow.webContents.send('graph_destroy', {
+      type: 'python',
+      msg: oscMsg.args[0]
+    })
+  } else if (oscMsg.address === '/python_graph/create') {
+    mainWindow.webContents.send('graph_create', {
+      type: 'python',
+      msg: oscMsg.args[0]
+    })
+  } else if (oscMsg.address === '/python_graph/disconnect') {
+    mainWindow.webContents.send('graph_disconnect', {
+      type: 'python',
+      msg: oscMsg.args[0]
+    })
+  } else if (oscMsg.address === '/python_graph/connect') {
+    mainWindow.webContents.send('graph_connect', {
       type: 'python',
       msg: oscMsg.args[0]
     })

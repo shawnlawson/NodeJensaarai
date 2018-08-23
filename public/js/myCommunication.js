@@ -94,3 +94,24 @@ ipcRenderer.on('feedback', (event, arg) => {
   }
 })
 
+ipcRenderer.on('tidal_rewrite', (event, arg) => {
+  replaceTidalCode(arg.msg)
+})
+
+ipcRenderer.on('graph', (event, arg) => {
+  buildGraph(arg.msg)
+})
+
+ipcRenderer.on('graph_destroy', (event, arg) => {
+  buildGraph(arg.msg)
+})
+  ipcRenderer.on('graph_create', (event, arg) => {
+  buildGraph(arg.msg)
+})
+  ipcRenderer.on('graph_disconnect', (event, arg) => {
+  buildGraph(arg.msg)
+})
+  ipcRenderer.on('graph_connect', (event, arg) => {
+  buildGraph(arg.msg)
+})
+

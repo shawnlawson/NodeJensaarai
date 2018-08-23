@@ -343,6 +343,39 @@ function clearExecHighLighting() {
     }
 }
 
+function replaceTidalCode(newCode) {
+    var sel = new Range(0,0,0,0)
+    var isWhiteSpace = /^\s*$/m
+    var isTidal = /\s*\/{2,}\s*tidal/i
+    var lastLine = editor.session.doc.getLength()
+
+    while (sel.end.row < lastLine) {
+        var lineEnd = editor.session.doc.getLine(sel.end.row)
+        
+        if (null !== isTidal.exec(lineEnd)) {
+            sel.start.row += 1
+            sel.end.row += 1
+            continue
+        }
+
+        if ((null !==  isWhiteSpace.exec(lineEnd) ||
+            "" === lineEnd) ) {
+            sel.end.row -= 1
+            break
+        } else {
+            sel.end.row += 1
+        }
+    }
+    
+    
+    editor.session.doc.removeFullLines(sel.start.row, sel.end.row)
+    editor.session.doc.insert({row: sel.start.row,
+                               column: 0},
+                               newCode+'\n')
+    editor.gotoLine(sel.end.row)
+    editor.navigateLineEnd()
+}
+
 /// /////////////////////////////////
 //  Tidal Feedback
 /// /////////////////////////////////
