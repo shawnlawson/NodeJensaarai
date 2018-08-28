@@ -9,6 +9,10 @@ var NNSave = []
 var NNStartTime = Date.now()
 var NNDeltaTime = 0
 
+var NNExecuteTimer = null
+var NNBaseTime = 1000  //this is in milliseconds
+var NNRandVariance = 200
+
 function setLineErrors(result, lineOffset) {
     while (mErrors.length > 0) {
         var mark = mErrors.pop()
@@ -343,6 +347,10 @@ function clearExecHighLighting() {
     }
 }
 
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 function replaceTidalCode(newCode) {
     var sel = new Range(0,0,0,0)
     var isWhiteSpace = /^\s*$/m
@@ -359,22 +367,27 @@ function replaceTidalCode(newCode) {
         }
 
         if ((null !==  isWhiteSpace.exec(lineEnd) ||
-            "" === lineEnd) ) {
+            "" === lineEnd)) {
             sel.end.row -= 1
+            lineEnd = editor.session.doc.getLine(sel.end.row)
+            sel.end.column = lineEnd.length
             break
-        } else {
-            sel.end.row += 1
-        }
+        } 
+        sel.end.row += 1        
     }
     
-    
-    editor.session.doc.removeFullLines(sel.start.row, sel.end.row)
-    editor.session.doc.insert({row: sel.start.row,
-                               column: 0},
-                               newCode+'\n')
-    editor.gotoLine(sel.end.row)
-    editor.navigateLineEnd()
+    editor.session.doc.replace(sel, newCode)
+    editor.navigateTo(sel.end.row, sel.end.column)
+
+    clearTimeout(NNExecuteTimer)
+    NNExecuteTimer = setTimeout(NNExecuteCallback, 
+                                NNBaseTime + getRndInteger(NNRandVariance, -NNRandVariance))
 }
+
+function NNExecuteCallback () {
+    editor.commands.exec("execBlock")
+}
+
 
 /// /////////////////////////////////
 //  Tidal Feedback
