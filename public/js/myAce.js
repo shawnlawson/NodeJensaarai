@@ -388,7 +388,6 @@ function NNExecuteCallback () {
     editor.commands.exec("execBlock")
 }
 
-
 /// /////////////////////////////////
 //  Tidal Feedback
 /// /////////////////////////////////

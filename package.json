@@ -8,7 +8,7 @@
     "install": "electron-rebuild",
     "build-darwin": "electron-packager . Jensaarai --platform=darwin --overwrite"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/shawnlawson/Jensaarai",
   "keywords": [
     "Electron",
     "quick",

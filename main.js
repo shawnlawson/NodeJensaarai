@@ -11,7 +11,7 @@ const osc = require('osc')
 
 let mainWindow, textWindow
 let outPythonPort = 7777, 
-    outTidalPort = 7777, 
+    outTidalPort = 7778, 
     outLuaPort = 7777, 
     outGLSLPort = 7777, 
     inAllPort = 8888

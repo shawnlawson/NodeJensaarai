@@ -192,6 +192,12 @@ var HaskellHighlightRules = function() {
          { token: 'support.constant.unit.haskell', regex: '\\(\\)' },
          { include: '#comments' } ] };
 
+
+
+    var keywordMapper = this.createKeywordMapper({
+      'support.function.prelude.haskell' : 'abs|acos|acosh|all|and|any|appendFile|applyM|asTypeOf|asin|asinh|atan|atan2|atanh|break|catch|ceiling|compare|concat|concatMap|const|cos|cosh|curry|cycle|decodeFloat|div|divMod|drop|dropWhile|elem|encodeFloat|enumFrom|enumFromThen|enumFromThenTo|enumFromTo|error|even|exp|exponent|fail|filter|flip|floatDigits|floatRadix|floatRange|floor|fmap|foldl|foldl1|foldr|foldr1|fromEnum|fromInteger|fromIntegral|fromRational|fst|gcd|getChar|getContents|getLine|head|id|init|interact|ioError|isDenormalized|isIEEE|isInfinite|isNaN|isNegativeZero|iterate|last|lcm|length|lex|lines|log|logBase|lookup|map|mapM|mapM_|max|maxBound|maximum|maybe|min|minBound|minimum|mod|negate|not|notElem|null|odd|or|otherwise|pi|pred|print|product|properFraction|putChar|putStr|putStrLn|quot|quotRem|read|readFile|readIO|readList|readLn|readParen|reads|readsPrec|realToFrac|recip|rem|repeat|replicate|return|reverse|round|scaleFloat|scanl|scanl1|scanr|scanr1|seq|sequence|sequence_|show|showChar|showList|showParen|showString|shows|showsPrec|significand|signum|sin|sinh|snd|span|splitAt|sqrt|subtract|succ|sum|tail|take|takeWhile|tan|tanh|toEnum|toInteger|toRational|truncate|uncurry|undefined|unlines|until|unwords|unzip|unzip3|userError|words|writeFile|zip|zip3|zipWith|zipWith3|slow|jux|rev|striate|sound|juxBy|brak|shape|degrade|speed|accelerate|degradeBy|density|fit|run|chop|unit|iter|every|palindrome|slowspread|smash|spread|trunc|zoom|gap|stut|mask|foldEvery|sometimesBy|sometimes|often|rarely|almostNever|almostAlways|when|elem|whenmod|within|slowcat|cat|interlace|randcat|seqP|append|spin|stack|superimpose|weave|wedge|anticipate|gain|bandf|bandq|begin|cps|coarse|crush|cut|cutoff|end|loop|nudge|pan|resonance|vowel|choose|irand|scale|up|hush|silence|'
+    })
+
     this.normalizeRules();
 };
 
