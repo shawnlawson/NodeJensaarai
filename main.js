@@ -64,11 +64,9 @@ function createOutputWindow () {
       y: extraDisplays.bounds.y,
       width: extraDisplays.bounds.width,
       height: extraDisplays.bounds.height,
-      // 'node-integration': true,
       transparent: true,
       hasShadow: false,
       frame: false,
-      // skipTaskbar: true,
       toolbar: false
       // alwaysOnTop: true
     })
@@ -82,6 +80,12 @@ function createOutputWindow () {
     }))
 
     textWindow.hide()
+
+    textWindow.on('close', function (e) {
+      e.preventDefault()
+      textWindow.hide()
+    })
+
   }
 }
 
