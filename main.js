@@ -83,7 +83,8 @@ function createOutputWindow () {
 
     textWindow.on('close', function (e) {
       e.preventDefault()
-      textWindow.hide()
+      if(textWindow)
+        textWindow.hide()
     })
 
   }
