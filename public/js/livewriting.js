@@ -64,7 +64,11 @@ var livewriting = (function ($) {
         var it = editor
         var timestamp = Date.now() - it.lw_startTime
         var index = it.lw_liveWritingJsonData.length
-        it.lw_liveWritingJsonData[index] = {'p': 'e', 't': timestamp, 'a': type, 'd': r, 'l': lang}
+        var deltaTime
+        if (index > 0) {
+          deltaTime = timestamp - it.lw_liveWritingJsonData[index-1].t
+        }
+        it.lw_liveWritingJsonData[index] = {'p': 'e', 't': timestamp, 'a': type, 'd': r, 'l': lang, 'c': mCode, 'dt' : deltaTime}
         if (DEBUG)console.log('executing line event:' + JSON.stringify(it.lw_liveWritingJsonData[index]) + ' time:' + timestamp)
       }
     },
@@ -244,18 +248,14 @@ var livewriting = (function ($) {
     },
     sliderGoToEnd = function (it) {
       var max = $('.livewriting_slider').slider('option', 'max')
-      if (it.lw_type == 'ace') {
-        it.setValue(it.lw_finaltext)
-        it.moveCursorTo(0, 0)
-      }
+      it.setValue(it.lw_finaltext)
+      it.moveCursorTo(0, 0)
       it.lw_data_index = it.lw_data.length - 1
       livewritingPause(it)
       $('.livewriting_slider').slider('value', max)
     },
     sliderGoToBeginning = function (it) {
-      if (it.lw_type == 'ace') {
-        it.setValue(it.lw_initialText)
-      }
+      it.setValue(it.lw_initialText)
       it.lw_data_index = 0
       livewritingPause(it)
       $('.livewriting_slider').slider('value', 0)
@@ -598,10 +598,7 @@ var livewriting = (function ($) {
       it.lw_type = json_file['editor_type'] 
       it.lw_finaltext = (json_file['finaltext'] ? json_file['finaltext'] : '')
       it.lw_initialText = (json_file['initialtext'] ? json_file['initialtext'] : '')
-      if (it.lw_type === 'ace') {
-        it.setValue(it.lw_initialText)
-      }
-
+      it.setValue(it.lw_initialText)
       it.lw_data_index = 0
       it.lw_data = json_file['action']
       it.lw_endTime = it.lw_data[it.lw_data.length - 1].t
@@ -694,7 +691,7 @@ var livewriting = (function ($) {
       var fName = d.getFullYear() + '_' + d.getMonth() + 'M_' + d.getDate() + 'D_' +
                       d.getHours() + 'H_' + d.getMinutes() + 'm_' + d.getSeconds() + 's'
 
-      saveAs(blob, 'the_grey_code_' + fName + '.txt')
+      saveAs(blob, 'Jensaarai_' + fName + '.txt')
     } 
     //we need this for code executions coming in remote
     else if (message === 'record') {
@@ -713,6 +710,7 @@ var livewriting = (function ($) {
         try {
           data = JSON.parse(option1)
         } catch (e) {
+          console.log(e)
           return false
         }
       }

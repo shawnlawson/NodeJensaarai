@@ -4,10 +4,11 @@ var mExecs = new Array()
 var mExecTimer = null
 var mFeedback = false
 var mLanguage = 'python'
+var mCode = ''
 
-var NNSave = []
-var NNStartTime = Date.now()
-var NNDeltaTime = 0
+// var NNSave = []
+// var NNStartTime = Date.now()
+// var NNDeltaTime = 0
 
 var NNExecuteTimer = null
 var NNBaseTime = 1000  //this is in milliseconds
@@ -98,25 +99,25 @@ editor.commands.addCommand({
 })
 
 
-editor.commands.addCommand({
-    name: 'saveForNN',
-    bindKey: {
-        win: 'Ctrl-Shift-S',
-        mac: 'Command-Shift-S'
-    },
-    exec: function() {
-        if (NNSave !== null) {
+// editor.commands.addCommand({
+//     name: 'saveForNN',
+//     bindKey: {
+//         win: 'Ctrl-Shift-S',
+//         mac: 'Command-Shift-S'
+//     },
+//     exec: function() {
+//         if (NNSave !== null) {
 
-            var blob = new Blob([JSON.stringify(NNSave, null, ' ')], { type: 'text/plain;charset=utf-8' })
-            var d = new Date()
-            d.setMonth(d.getMonth() + 1)
-            var fName = d.getFullYear() + '_' + d.getMonth() + 'M_' + d.getDate() + 'D_' +
-                d.getHours() + 'H_' + d.getMinutes() + 'm_' + d.getSeconds() + 's'
+//             var blob = new Blob([JSON.stringify(NNSave, null, ' ')], { type: 'text/plain;charset=utf-8' })
+//             var d = new Date()
+//             d.setMonth(d.getMonth() + 1)
+//             var fName = d.getFullYear() + '_' + d.getMonth() + 'M_' + d.getDate() + 'D_' +
+//                 d.getHours() + 'H_' + d.getMinutes() + 'm_' + d.getSeconds() + 's'
 
-            saveAs(blob, 'NN_tidal_' + fName + '.txt')
-        }
-    }
-})
+//             saveAs(blob, 'NN_tidal_' + fName + '.txt')
+//         }
+//     }
+// })
 
 editor.commands.addCommand({
     name: 'execLine',
@@ -179,8 +180,8 @@ python up to tag down to empty line
 tidal up to tag down to empty line
 lua up to tag down to closing block...? count end's and open conditions?
 glsl whole file, or auto
-
 */
+
     if (execType === 'execLine') {
         //if single line and nothing selected
         if (theRange.start.column === theRange.end.column &&
@@ -297,21 +298,22 @@ glsl whole file, or auto
     mExecTimer = setTimeout(clearExecHighLighting, 550)
 
     //start saving for NN
-    var timeStamp = Date.now() - NNStartTime
-    var index = NNSave.length
-    if (index > 0) {
-        NNDeltaTime = timeStamp - NNSave[index-1].t
-    }
-    NNSave[index] = {
-        'l': theLanguage,
-        't': timeStamp,
-        'd': NNDeltaTime,
-        'c': theCode
-    }
+    // var timeStamp = Date.now() - NNStartTime
+    // var index = NNSave.length
+    // if (index > 0) {
+    //     NNDeltaTime = timeStamp - NNSave[index-1].t
+    // }
+    // NNSave[index] = {
+    //     'l': theLanguage,
+    //     't': timeStamp,
+    //     'd': NNDeltaTime,
+    //     'c': theCode
+    // }
     //end saving for NN
 
     ipcRenderer.send(theLanguage, theCode)
     mLanguage = theLanguage //needed for second window to know which language?
+    mCode = theCode
 }
 
 function whichLanguage(aRange) {
