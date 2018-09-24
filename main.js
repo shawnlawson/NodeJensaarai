@@ -75,7 +75,7 @@ function createOutputWindow () {
 
     textWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'public/text.html'),
-      protocol: 'file:',
+      protocol: 'https:',
       slashes: true
     }))
 

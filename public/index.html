@@ -50,6 +50,9 @@
         <input type="text" id="firebase_hash" value="-L96f9MrXfXSkw97cLp1" />
         <label for="firebase_hash">Firebase Hash</label>
         <br/><br/>
+        <input type="text" id="firebase_user" value="firebase email" />
+        <input type="text" id="firebase_pass" value="firebase password" />
+        <br/><br/>
         <input type="submit" id="connect_to_firebase" value="Connect" />
         <input type="submit" id="disconnect_to_firebase" value="Disconnect" />        
         <hr />
@@ -125,6 +128,7 @@
         </div>
     </div>
 </body>
+<script type="text/javascript" src="js/config.js"></script>
 <script type="text/javascript" src="lib/firebase.js"></script>
 <script> window.$ = window.jQuery = require('jquery')
          window.cytoscape = require('cytoscape') 

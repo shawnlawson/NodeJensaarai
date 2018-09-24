@@ -170,6 +170,11 @@ $(document)
                 if (firepad !== null) {
                     firepad.dispose()
                 }
+                firebase.auth().signOut().then(function() {
+                  // Sign-out successful.
+                }).catch(function(error) {
+                  // An error happened.
+                });
             })
 
         $('#set_osc_ports')
@@ -234,6 +239,10 @@ $(document)
                 //   return false
                 // }
             })
+
+        $('#firebase_user').val(localStorage.firebase_user) 
+        $('#firebase_pass').val(localStorage.firebase_pass)
+        
     }) // end document ready
     .keydown(function(event) {
 
