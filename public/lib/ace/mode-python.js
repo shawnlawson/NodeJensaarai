@@ -104,7 +104,7 @@ ace.define('ace/mode/python_highlight_rules', ['require', 'exports', 'module', '
 		'isFloat|isInt|isOP|isPython|isString|isToggle|style|isCustom|copy|eval|' +
 		'evalNorm|evalExpression|evalExport|create|par|pars()|expr|tdu|rand|' +
 		'parent|name|path|children|destroy|absTime|frame|seconds|outputConnectors|' +
-		'connect|disconnect|getGraph|resetPars|printPars|printFiles|printOut|')
+		'connect|disconnect|getGraph|resetPars|printPars|printFiles|printOut|pprint|')
 
     var keywordMapper = this.createKeywordMapper({
       'invalid.deprecated': 'debugger',
