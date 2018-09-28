@@ -53,8 +53,6 @@ function createFirepad(isNew) {
             defaultText: '#write some python or tidal\n\n\nd1 $ s "funky*4"\n  # n (irand 8)\n  # gain  "1.2"\n  # unit "c"\n  # speed "4"\n\n'
         })
 
-       
-
         audioMessageRef = firebase.database().ref('audioMessage/' + 1)
 
         audioMessageRef.on('child_added', function(data) {

@@ -67,15 +67,15 @@ function createOutputWindow () {
       transparent: true,
       hasShadow: false,
       frame: false,
-      toolbar: false
-      // alwaysOnTop: true
+      toolbar: false,
+      alwaysOnTop: true
     })
 
     textWindow.setMenu(null)
 
     textWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'public/text.html'),
-      protocol: 'https:',
+      protocol: 'file:',
       slashes: true
     }))
 
@@ -172,7 +172,7 @@ ipcMain.on('newPorts', (event, arg) =>{
 })
 
 ipcMain.on('window', (event, arg) => {
-  // console.log(arg)
+  console.log(arg)
   if (arg === true)
     textWindow.show() 
   else
