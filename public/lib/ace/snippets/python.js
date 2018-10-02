@@ -103,16 +103,6 @@ snippet try Try/Except/Else/Finally\n\
 snippet pp\n\
 	print(pformat(${1}.pars()))${2}\n\
 ## Touch Designer Quick Functions\n\
-#connect\n\
-snippet ->>\n\
-	outputConnectors[0].connect(${1:TDobject}.inputConnectors[${2:int}])\n\
-snippet ->\n\
-	outputConnectors[0].connect(${1:object})\n\
-#disconnect\n\
-snippet -xx\n\
-	outputConnectors[${1:int}].disconnect()\n\
-snippet -x\n\
-	outputConnectors[0].disconnect()\n\
 snippet clamp\n\
 	clamp(${1:input}, ${1:min}, ${1:max})\n\
 snippet remap\n\

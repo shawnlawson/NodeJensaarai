@@ -214,31 +214,6 @@ udpPort.on('message', function (oscMsg) {
       type: 'python',
       msg: oscMsg.args[0]
     })
-  } else if (oscMsg.address === '/python_graph') {
-    mainWindow.webContents.send('graph', {
-      type: 'python',
-      msg: oscMsg.args[0]
-    })
-  } else if (oscMsg.address === '/python_graph/destroy') {
-    mainWindow.webContents.send('graph_destroy', {
-      type: 'python',
-      msg: oscMsg.args[0]
-    })
-  } else if (oscMsg.address === '/python_graph/create') {
-    mainWindow.webContents.send('graph_create', {
-      type: 'python',
-      msg: oscMsg.args[0]
-    })
-  } else if (oscMsg.address === '/python_graph/disconnect') {
-    mainWindow.webContents.send('graph_disconnect', {
-      type: 'python',
-      msg: oscMsg.args[0]
-    })
-  } else if (oscMsg.address === '/python_graph/connect') {
-    mainWindow.webContents.send('graph_connect', {
-      type: 'python',
-      msg: oscMsg.args[0]
-    })
   } else if (oscMsg.address === '/lua_feedback') {
     mainWindow.webContents.send('feedback', {
       type: 'lua',

@@ -35,12 +35,10 @@
     "electron-rebuild": "^1.7.3"
   },
   "dependencies": {
-    "cytoscape": "^3.2.15",
-    "cytoscape-dagre": "^2.2.1",
     "electron-debug": "^2.0.0",
-    "firebase": "^5.0.4",
+    "firebase": "^5.5.2",
     "firebase-token-generator": "^2.0.0",
-    "firepad": "^1.4.0",
+    "firepad": "^1.5.0",
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "osc": "^2.2.2"

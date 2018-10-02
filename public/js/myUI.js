@@ -1,43 +1,5 @@
 var debugging = false
 var secondWindow = false
-var cy = cytoscape({
-    container: $('#cy'),
-
-    style: cytoscape.stylesheet()
-        .selector('node')
-        .css({
-            'content': 'data(id)',
-            'text-opacity': 0.75,
-            'text-valign': 'top',
-            'text-halign': 'center',
-            'background-color': '#11479e',
-            'color': 'white',
-            'shape': 'ellipse'
-            // 'text-outline-width': 2,
-            // 'text-outline-color': '#999'
-        })
-        .selector('.bypass')
-        .css({
-            'shape': 'triangle'
-        })
-        .selector('edge')
-        .css({
-            'curve-style': 'bezier',
-            'target-arrow-shape': 'triangle',
-            'line-color': '#9dbaea',
-            'target-arrow-color': '#9dbaea',
-            'width': 1
-        }),
-
-    layout: {
-        name: 'dagre',
-        rankDir: 'LR',
-        ranker: 'longest-path'
-    },
-    panningEnabled: false,
-    zoomingEnabled: false
-
-})
 
 $(document)
     .ready(function() {
@@ -62,6 +24,7 @@ $(document)
                     fontSize: data.item.value + 'pt'
                 })
                 this.blur()
+                editor.focus()
             })
 
         $('#selectBackgroundAlpha')
@@ -73,6 +36,7 @@ $(document)
                 var rgbaCol = 'rgba(0, 0, 0, ' + parseFloat(data.item.value) + ')';
                 $('html, body').css('background', rgbaCol)
                 this.blur()
+                editor.focus()
             })
 
         $('#selectHighlighting')
@@ -94,6 +58,7 @@ $(document)
 
                 sendNewHighlighting(data.item.value)
                 this.blur()
+                editor.focus()
             })
 
         $('#autoComplete')
@@ -103,22 +68,14 @@ $(document)
                     enableLiveAutocompletion: !editor.getOptions().enableLiveAutocompletion
                 })
                 this.blur()
+                editor.focus()
             })
 
         $('#debug')
             .button()
             .bind('change', function(event) {
-                debugging = !debugging
-                if (debugging) {
-                    $('#editor').hide()
-                    cy.panningEnabled(true)
-                    cy.zoomingEnabled(true)
-                } else {
-                    $('#editor').show()
-                    cy.panningEnabled(false)
-                    cy.zoomingEnabled(false)
-                }
                 this.blur()
+                editor.focus()
             })
 
         $('#extraWindow')
@@ -127,6 +84,7 @@ $(document)
                 secondWindow = !secondWindow
                 sendUpdateWindow(secondWindow)
                 this.blur()
+                editor.focus()
             })
 
         $('#network')
@@ -168,6 +126,11 @@ $(document)
             .button()
             .click(function(event) {
                 if (firepad !== null) {
+                    firebase.auth().signOut().then(function() {
+                      console.log('Signed Out');
+                    }, function(error) {
+                      console.error('Sign Out Error', error);
+                    });
                     firepad.dispose()
                 }
                 firebase.auth().signOut().then(function() {
@@ -242,6 +205,7 @@ $(document)
 
         $('#firebase_user').val(localStorage.firebase_user) 
         $('#firebase_pass').val(localStorage.firebase_pass)
+        editor.focus()
         
     }) // end document ready
     .keydown(function(event) {
@@ -283,6 +247,7 @@ function openFile(event, who) {
                     editor.livewriting('playJson', reader.result)
                 } else if (who === "editor") {
                     editor.setValue(reader.result, -1)
+                    editor.focus()
                 }
             }
         })(f)
@@ -308,37 +273,4 @@ function addStyleRule(css) {
     }
     editor.addedStyleRules[css] = true
     return editor.addedStyleSheet.insertRule(css, 0)
-}
-
-function buildGraph(data) {
-    theGraph = JSON.parse(data)
-
-    cy.elements().remove()
-
-    for (i = 0; i < theGraph.length; i++) {
-        cy.add({
-            group: "nodes",
-            data: {
-                id: theGraph[i][0]
-            }
-        })
-
-        if (theGraph[i][2] === true)
-            cy.$id(theGraph[i][0]).classes('bypass')
-    }
-    //ugh, second iteration through for edges, cause can't connect if they don't exist
-    for (i = 0; i < theGraph.length; i++) {
-        if (0 < theGraph[i][1].length) {
-            for (j = 0; j < theGraph[i][1].length; j++) {
-                cy.add({
-                    group: "edges",
-                    data: {
-                        source: theGraph[i][0],
-                        target: theGraph[i][1][j]
-                    }
-                })
-            }
-        }
-    }
-    cy.layout({ name: 'dagre', rankDir: 'LR', ranker: 'network-simplex' }).run()
 }
