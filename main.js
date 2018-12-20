@@ -9,7 +9,7 @@ const url = require('url')
 const {ipcMain} = require('electron')
 const osc = require('osc')
 
-let mainWindow, textWindow
+let mainWindow
 let outPythonPort = 7777, 
     outTidalPort = 7778, 
     outLuaPort = 7777, 
@@ -18,6 +18,7 @@ let outPythonPort = 7777,
 
 let extraIP = "192.168.1.10"
 let extraSend = false
+
 
 /*************************
 Functions for Electron Creation
@@ -45,50 +46,10 @@ function createWindow () {
 
   mainWindow.on('closed', function () {
     mainWindow = null
-    textWindow = null
   })
 
-  createOutputWindow()
 }
 
-function createOutputWindow () {
-  let displays = electron.screen.getAllDisplays()
-  // console.log(displays)
-  let extraDisplays = displays.find((display) => {
-    return display.bounds.x !== 0 || display.bounds.y !== 0
-  })
-
-  if (extraDisplays) {
-    textWindow = new BrowserWindow({
-      x: extraDisplays.bounds.x,
-      y: extraDisplays.bounds.y,
-      width: extraDisplays.bounds.width,
-      height: extraDisplays.bounds.height,
-      transparent: true,
-      hasShadow: false,
-      frame: false,
-      toolbar: false,
-      alwaysOnTop: true
-    })
-
-    textWindow.setMenu(null)
-
-    textWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'public/text.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-
-    textWindow.hide()
-
-    textWindow.on('close', function (e) {
-      // e.preventDefault()
-      // if(textWindow)
-      //   textWindow.hide()
-    })
-
-  }
-}
 
 /*************************
 Electron app functions
@@ -108,11 +69,32 @@ app.on('activate', function () {
 })
 
 /*************************
+Serve Local for TD
+*************************/
+let expressTD = require('express')
+let appTD = expressTD()
+// let serverTD = require('http').Server(appTD)
+let ioTD = require('socket.io')
+            .listen(appTD.listen(8000, () => console.log('listening')))
+
+// expressTD().use(expressTD.static(__dirname + '/node_modules'))
+appTD.use(expressTD.static('public'))
+appTD.get('/', function(req, res){
+  res.sendFile('/text.html')
+})
+
+ioTD.on('connection', function(socket){
+  console.log('connected')
+})
+
+// serverTD.listen(8000, () => console.log('listening'))
+
+
+/*************************
 Interprocess communication between main and windows
 *************************/
 ipcMain.on('change', (event, arg) => {
-  // console.log(arg)
-  if (textWindow) { textWindow.webContents.send('change', arg) }
+  ioTD.emit('change', {msg: arg})
 })
 
 ipcMain.on('python', (event, arg) => {
@@ -171,16 +153,9 @@ ipcMain.on('newPorts', (event, arg) =>{
   }
 })
 
-ipcMain.on('window', (event, arg) => {
-  console.log(arg)
-  if (arg === true)
-    textWindow.show() 
-  else
-    textWindow.hide() 
-})
 
 ipcMain.on('highlighting', (event, arg) => {
-  if (textWindow) { textWindow.webContents.send('highlighting', arg) }
+  // if (textWindow) { textWindow.webContents.send('highlighting', arg) }
 })
 
 /*************************

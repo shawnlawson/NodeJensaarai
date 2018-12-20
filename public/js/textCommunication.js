@@ -1,6 +1,10 @@
-const { ipcRenderer } = require('electron')
+var socket = io()
 
-ipcRenderer.on('change', (event, arg) => {
+socket.on('connect', () => console.log('connected'))
+socket.on('disconnect', () => console.log('disconnected'))
+
+socket.on('change', function(message) {
+    var arg = message.msg
     if (arg.p === 'c') { // change in content
         var change = arg.d
         var text
@@ -55,17 +59,18 @@ ipcRenderer.on('change', (event, arg) => {
         // console.log(arg)
         editor.runCode(arg.d, arg.a, arg.l)
     }
+
 })
 
-ipcRenderer.on('highlighting', (event, arg) => {
-    if (arg === 'none')
-        editor.session.setMode('') //TODO is this ok?
-    else if (arg === 'glsl')
-        editor.session.setMode('ace/mode/glsl')
-    else if (arg === 'tidal')
-        editor.session.setMode('ace/mode/haskell')
-    else if (arg === 'python')
-        editor.session.setMode('ace/mode/python')
-    else if (arg === 'lua')
-        editor.session.setMode('ace/mode/lua')
-})
+// ipcRenderer.on('highlighting', (event, arg) => {
+//     if (arg === 'none')
+//         editor.session.setMode('') //TODO is this ok?
+//     else if (arg === 'glsl')
+//         editor.session.setMode('ace/mode/glsl')
+//     else if (arg === 'tidal')
+//         editor.session.setMode('ace/mode/haskell')
+//     else if (arg === 'python')
+//         editor.session.setMode('ace/mode/python')
+//     else if (arg === 'lua')
+//         editor.session.setMode('ace/mode/lua')
+// })
