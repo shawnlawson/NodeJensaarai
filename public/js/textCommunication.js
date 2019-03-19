@@ -3,7 +3,7 @@ var socket = io()
 socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', () => console.log('disconnected'))
 
-socket.on('change', function(message) {
+socket.on('change', (message) => {
     var arg = message.msg
     if (arg.p === 'c') { // change in content
         var change = arg.d
@@ -62,15 +62,16 @@ socket.on('change', function(message) {
 
 })
 
-// ipcRenderer.on('highlighting', (event, arg) => {
-//     if (arg === 'none')
-//         editor.session.setMode('') //TODO is this ok?
-//     else if (arg === 'glsl')
-//         editor.session.setMode('ace/mode/glsl')
-//     else if (arg === 'tidal')
-//         editor.session.setMode('ace/mode/haskell')
-//     else if (arg === 'python')
-//         editor.session.setMode('ace/mode/python')
-//     else if (arg === 'lua')
-//         editor.session.setMode('ace/mode/lua')
-// })
+socket.on('highlighting', (message) => {
+    var arg = message.msg
+    if (arg === 'none')
+        editor.session.setMode('') //TODO is this ok?
+    else if (arg === 'glsl')
+        editor.session.setMode('ace/mode/glsl')
+    else if (arg === 'tidal')
+        editor.session.setMode('ace/mode/haskell')
+    else if (arg === 'python')
+        editor.session.setMode('ace/mode/python')
+    else if (arg === 'lua')
+        editor.session.setMode('ace/mode/lua')
+})

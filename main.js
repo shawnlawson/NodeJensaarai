@@ -77,15 +77,15 @@ let appTD = expressTD()
 let ioTD = require('socket.io')
             .listen(appTD.listen(8000, () => console.log('listening')))
 
-// expressTD().use(expressTD.static(__dirname + '/node_modules'))
 appTD.use(expressTD.static('public'))
 appTD.get('/', function(req, res){
   res.sendFile('/text.html')
 })
 
 ioTD.on('connection', function(socket){
-  console.log('connected')
+   console.log('connected')
 })
+
 
 // serverTD.listen(8000, () => console.log('listening'))
 
@@ -106,7 +106,7 @@ ipcMain.on('python', (event, arg) => {
 })
 
 ipcMain.on('tidal', (event, arg) => {
-  console.log(arg)
+  // console.log(arg)
   udpPort.send({
     address: '/tidal',
     args: [arg + '\n']
@@ -121,7 +121,7 @@ ipcMain.on('tidal', (event, arg) => {
 })
 
 ipcMain.on('lua', (event, arg) => {
-  console.log(arg)
+  // console.log(arg)
   udpPort.send({
     address: '/lua',
     args: [arg]
@@ -129,7 +129,7 @@ ipcMain.on('lua', (event, arg) => {
 })
 
 ipcMain.on('glsl', (event, arg) => {
-  console.log(arg)
+  // console.log(arg)
   udpPort.send({
     address: '/glsl',
     args: [arg + '\n']
@@ -155,6 +155,8 @@ ipcMain.on('newPorts', (event, arg) =>{
 
 
 ipcMain.on('highlighting', (event, arg) => {
+  console.log(arg)
+  ioTD.emit('highlighting', {msg: arg})
   // if (textWindow) { textWindow.webContents.send('highlighting', arg) }
 })
 

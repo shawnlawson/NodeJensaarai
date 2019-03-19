@@ -90,7 +90,7 @@ ipcRenderer.on('feedback', (event, arg) => {
   //   feedback.scrollToLine(l, false, true, function () {})
   //   feedback.session.selection.clearSelection()
   } else if (arg.type === 'glsl') {
-    setLineErrors(arg.msg, 49)
+    setLineErrors(arg.msg, 50)
   }
 })
 
