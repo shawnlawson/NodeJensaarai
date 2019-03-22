@@ -12,13 +12,25 @@ snippet cir\n\
 #rotate\n\
 snippet rot\n\
 	rotate(${1:vec2}, ${2:vec2}, ${3:float})${4}\n\
-#snoise\n\
+#kaleidescope\n\
+snippet kale\n\
+	kale(${1:vec2}, ${2:PI2})${3}\n\
+#simplex noise\n\
 snippet sno\n\
-	snoise(${1:vec2})$2\n\
-#nyan frame\n\
-snippet nyan\n\
-	nyanFrame(${1:vec2}, ${2:float})$3\n\
+	TDSimplexNoise(${1:vec2})\n\
+#perlin noise\n\
+snippet pno\n\
+	TDPerlinNoise(${1:vec2})\n\
+#hsv 2 rgb\n\
+snippet hsv\n\
+	TDHSVToRGB(${1:vec3})\n\
+#rgb 2 hsv\n\
+snippet rgb\n\
+	TDRGBToHSV(${1:vec3})\n\
 ## Quick stuff\n\
+#backbuffer\n\
+snippet back\n\
+	sTD2DInputs[0]\n\
 #vec2\n\
 snippet vc\n\
 	vec2\n\

@@ -6,10 +6,6 @@ var mFeedback = false
 var mLanguage = 'python'
 var mCode = ''
 
-// var NNSave = []
-// var NNStartTime = Date.now()
-// var NNDeltaTime = 0
-
 var NNExecuteTimer = null
 var NNBaseTime = 1000  //this is in milliseconds
 var NNRandVariance = 200
@@ -74,10 +70,10 @@ editor.setOptions({
 })
 
 editor.setShowPrintMargin(false)
-// editor.getSession().on('change', function (e) {
-//   clearTimeout(mCompileTimer)
-//   mCompileTimer = setTimeout(setShaderFromEditor, 200)
-// })
+editor.getSession().on('change', function (e) {
+  clearTimeout(mCompileTimer)
+  mCompileTimer = setTimeout(setShaderFromEditor, 200)
+})
 editor.$blockScrolling = Infinity
 editor.setOptions({
     fontSize: '12pt',
@@ -97,27 +93,6 @@ editor.commands.addCommand({
          $('#edFile').trigger('click')
     }
 })
-
-
-// editor.commands.addCommand({
-//     name: 'saveForNN',
-//     bindKey: {
-//         win: 'Ctrl-Shift-S',
-//         mac: 'Command-Shift-S'
-//     },
-//     exec: function() {
-//         if (NNSave !== null) {
-
-//             var blob = new Blob([JSON.stringify(NNSave, null, ' ')], { type: 'text/plain;charset=utf-8' })
-//             var d = new Date()
-//             d.setMonth(d.getMonth() + 1)
-//             var fName = d.getFullYear() + '_' + d.getMonth() + 'M_' + d.getDate() + 'D_' +
-//                 d.getHours() + 'H_' + d.getMinutes() + 'm_' + d.getSeconds() + 's'
-
-//             saveAs(blob, 'NN_tidal_' + fName + '.txt')
-//         }
-//     }
-// })
 
 editor.commands.addCommand({
     name: 'execLine',
@@ -293,23 +268,11 @@ glsl whole file, or auto
         return range
     }
 
-    var id = editor.session.addMarker(sel, 'execHighlight', 'text')
-    mExecs.push(id)
-    mExecTimer = setTimeout(clearExecHighLighting, 550)
-
-    //start saving for NN
-    // var timeStamp = Date.now() - NNStartTime
-    // var index = NNSave.length
-    // if (index > 0) {
-    //     NNDeltaTime = timeStamp - NNSave[index-1].t
-    // }
-    // NNSave[index] = {
-    //     'l': theLanguage,
-    //     't': timeStamp,
-    //     'd': NNDeltaTime,
-    //     'c': theCode
-    // }
-    //end saving for NN
+    if (theLanguage !== 'glsl') {
+        var id = editor.session.addMarker(sel, 'execHighlight', 'text')
+        mExecs.push(id)
+        mExecTimer = setTimeout(clearExecHighLighting, 550)
+    }
 
     ipcRenderer.send(theLanguage, theCode)
     mLanguage = theLanguage //needed for second window to know which language?
@@ -388,6 +351,17 @@ function replaceTidalCode(newCode) {
 
 function NNExecuteCallback () {
     editor.commands.exec("execBlock")
+}
+
+function setShaderFromEditor() {
+    var tempLang = whichLanguage(editor.session.selection.getRange())
+    // editor.livewriting('record', 
+    //                    editor.session.selection.getRange(), 
+    //                    'execBlock', 
+    //                    tempLang)
+    editor.runCode(editor.session.selection.getRange(), 
+                   'execBlock', 
+                   tempLang)
 }
 
 /// /////////////////////////////////

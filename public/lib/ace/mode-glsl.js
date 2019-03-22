@@ -853,7 +853,7 @@ var c_cppHighlightRules = require("./c_cpp_highlight_rules").c_cppHighlightRules
 var glslHighlightRules = function() {
 
     var colorsPlus = ("black|white|red|orange|yellow|green|blue|purple|pink|" + 
-                    "lime|teal|PI|PI2|"
+                    "lime|teal|magenta|brown|PI|PI2|theta|phi|"
     );
 
     var keywords = (
@@ -863,11 +863,11 @@ var glslHighlightRules = function() {
     );
 
     var storage = (
-        //"in|out|inout|
+        "in|out|inout|" +
         "float|int|bool|mat2|mat3|" +
         "mat4|vec2|vec3|vec4|" +
-        //ivec2|ivec3|ivec4|bvec2|bvec3|bvec4|
-        "struct|void|"
+        //ivec2|ivec3|ivec4|bvec2|bvec3|bvec4|struct|
+        "void|"
     );
 
     var mathFunctions = (
@@ -878,25 +878,27 @@ var glslHighlightRules = function() {
         //"lessThanEqual|greaterThan|greaterThanEqual|equal|notEqual|any|all|not"
     );
 
-    var glFunctions = (""
+    var glFunctions = (
+        "texture|" +
+        "TDRGBToHSV|TDHSVToRGB|TDPerlinNoise|TDSimplexNoise|"
         );
 
-    var glVariables = (
+    // var glVariables = (
         // "gl_MaxVertexAttribs|gl_MaxVertexUniformVectors|gl_MaxVaryingVectors|" +
         // "gl_MaxVertexTextureImageUnits|gl_MaxCombinedTextureImageUnits|" +
         // "gl_MaxTextureImageUnits|gl_MaxFragmentUniformVectors|gl_MaxDrawBuffers|" +
         // "gl_DepthRangeParameters|gl_DepthRange|" +
-        "gl_Position|gl_FragCoord|gl_FragColor|"
-        //|" +
+        // "gl_Position|gl_FragCoord|gl_FragColor|"
+        // |" +
         // "gl_PointSize|gl_FrontFacing|gl_PointCoord||gl_FragData"
-    );
+    // );
 
     var headerFunctions = (
-        "rand|box|circle|rotate|snoise|noise|hsv2rgb|voronoi|sexy|nyanFrame|uv|uvN|"
+        "rand|box|circle|rotate|noise|voronoi|kale|st|stN|"
         );
 
     var uniforms = (
-        "resolution|time|mouse|bands|backbuffer|"
+        "resolution|time|bands|lag|speed|sTD2DInputs[0]|"
         );
 
     var keywordMapper = this.createKeywordMapper({
@@ -906,8 +908,8 @@ var glslHighlightRules = function() {
         "keyword.control": keywords,
         "storage": storage,
         "storage.modifier" : "attribute|const|uniform|varying|static",
-        "support.variable": uniforms+glVariables,
-        "support.function.gl" : "texture2D",
+        "support.variable": uniforms,
+        "support.function.gl" : glFunctions,
         "support.function.math": mathFunctions,
         "support.function.other": headerFunctions
     }, "identifier");

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "install": "electron-rebuild",
-    "build-darwin": "electron-packager . Jensaarai --platform=darwin --overwrite"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/shawnlawson/Jensaarai",
   "keywords": [
@@ -19,9 +20,9 @@
   "author": "Shawn lawson",
   "license": "CC0-1.0",
   "build": {
-    "appId": "lawson_45368",
+    "appId": "Jensaarai",
     "mac": {
-      "category": "your.app.category.type"
+      "category": "com.shawnlawson.jensaarai"
     }
   },
   "standard": {
@@ -31,7 +32,7 @@
   },
   "devDependencies": {
     "electron": "^1.7.8",
-    "electron-packager": "^12.1.0",
+    "electron-builder": "^20.39.0",
     "electron-rebuild": "^1.7.3"
   },
   "dependencies": {
@@ -39,7 +40,7 @@
     "express": "^4.16.4",
     "firebase": "^5.5.2",
     "firebase-token-generator": "^2.0.0",
-    "firepad": "^1.5.0",
+    "firepad": "^1.5.3",
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "osc": "^2.2.2",
