@@ -5,9 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "install": "electron-rebuild",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "install": "electron-rebuild"
   },
   "repository": "https://github.com/shawnlawson/Jensaarai",
   "keywords": [
@@ -32,7 +30,6 @@
   },
   "devDependencies": {
     "electron": "^1.7.8",
-    "electron-builder": "^20.39.0",
     "electron-rebuild": "^1.7.3"
   },
   "dependencies": {
