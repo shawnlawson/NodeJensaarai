@@ -1,8 +1,65 @@
 const {ipcRenderer} = require('electron')
+const osc = require('osc')
 
-  ///////////////////////////////////////////////////////////////////
-  // Outgoing
-  ///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+// OSC Outgoing
+///////////////////////////////////////////////////////////////////
+var udpPort = new osc.UDPPort({
+                      localAddress: "0.0.0.0",
+                      localPort: 8888
+                  })
+
+udpPort.on("ready", () => {
+    console.log("OSC Send Ready");    
+})
+
+udpPort.on("error", (error) => {
+    console.log("Error: ", error.message);
+})
+
+udpPort.open()
+
+function sendCode() {
+  var message = {address: '/'+mLanguage,
+                  args: [{type: 's',
+                          value: mCode
+                        }]
+                }
+
+//TODO::: fix ports
+  if (mLanguage === 'tidal'){
+    udpPort.send(message, '127.0.0.1', 7778)
+  } 
+  else if (mLanguage === 'glsl' || mLanguage === 'python') {
+    udpPort.send(message, '127.0.0.1', 7777)
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////
+// OSC Incoming
+///////////////////////////////////////////////////////////////////
+
+udpPort.on('message', (oscMsg) => { 
+  if (oscMsg.address === '/python_feedback') {
+    feedback.setValue(oscMsg.args[0], 1)
+  } 
+  else if (oscMsg.address === '/tidal_feedback') {
+    feedback.setValue(oscMsg.args[0], 1)
+  } 
+  else if (oscMsg.address === '/glsl_feedback') {
+    feedback.setValue(oscMsg.args[0], 1)
+    setLineErrors(oscMsg.args[0], 50)
+  } 
+  else if (oscMsg.address === 'tidal_rewrite') {
+    replaceTidalCode(oscMsg.args[0])
+  }
+})
+
+
+///////////////////////////////////////////////////////////////////
+// For browser window
+///////////////////////////////////////////////////////////////////
 editor.on('change', (event) => {
   var timestamp = Date.now()
   var data = {'p': 'c', 't': timestamp, 'd': event}
@@ -61,39 +118,10 @@ editor.session.on('changeScrollTop', (number) => {
   ipcRenderer.send('change', data)
 })
 
-function sendNewOSCPorts(data) {
-  ipcRenderer.send('newPorts', data)
-}
-
-function sendUpdateWindow(data) {
-  ipcRenderer.send('window', data)
-}
-
 function sendNewHighlighting(data) {
   ipcRenderer.send('highlighting', data)
 }
 
-  ///////////////////////////////////////////////////////////////////
-  // Incoming
-  ///////////////////////////////////////////////////////////////////
-ipcRenderer.on('feedback', (event, arg) => {
-  feedback.setValue(arg.msg, 1)
-   if (arg.type === 'tidal') {
-  //   var l = feedback.session.getLength()
-  //   feedback.session.insert({
-  //     row: l,
-  //     column: 0
-  //   }, arg.msg + '\n')
-  //   if (l > 400) {
-  //     feedback.session.removeLines(0, 100)
-  //   }
-  //   feedback.scrollToLine(l, false, true, function () {})
-  //   feedback.session.selection.clearSelection()
-  } else if (arg.type === 'glsl') {
-    setLineErrors(arg.msg, 50)
-  }
-})
-
-ipcRenderer.on('tidal_rewrite', (event, arg) => {
-  replaceTidalCode(arg.msg)
+ipcRenderer.on('initAsk', (event, arg) => {
+  ipcRenderer.send('initReply', {code: editor.getSession().getValue()})
 })

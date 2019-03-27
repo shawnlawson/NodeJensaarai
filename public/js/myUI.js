@@ -206,7 +206,6 @@ $(document)
         $('#firebase_user').val(localStorage.firebase_user) 
         $('#firebase_pass').val(localStorage.firebase_pass)
         editor.focus()
-        
     }) // end document ready
     .keydown(function(event) {
 

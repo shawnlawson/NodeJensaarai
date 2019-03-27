@@ -7,6 +7,7 @@ $(document)
     //     fontSize: data.item.value + 'pt'
     //   })
     // })
+    getStarterCode()
   }) // end document ready
 
 function addStyleRule (css) {

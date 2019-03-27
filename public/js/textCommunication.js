@@ -75,3 +75,11 @@ socket.on('highlighting', (message) => {
     else if (arg === 'lua')
         editor.session.setMode('ace/mode/lua')
 })
+
+function getStarterCode() {
+    socket.emit('initAsk', '')
+}
+
+socket.on('initReply', (message) => {
+    editor.getSession().setValue(message.msg)
+})

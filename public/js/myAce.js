@@ -274,9 +274,10 @@ glsl whole file, or auto
         mExecTimer = setTimeout(clearExecHighLighting, 550)
     }
 
-    ipcRenderer.send(theLanguage, theCode)
-    mLanguage = theLanguage //needed for second window to know which language?
+    mLanguage = theLanguage
     mCode = theCode
+
+    sendCode()
 }
 
 function whichLanguage(aRange) {
@@ -359,9 +360,11 @@ function setShaderFromEditor() {
     //                    editor.session.selection.getRange(), 
     //                    'execBlock', 
     //                    tempLang)
-    editor.runCode(editor.session.selection.getRange(), 
-                   'execBlock', 
-                   tempLang)
+    if (tempLang === 'glsl') {
+        editor.runCode(editor.session.selection.getRange(), 
+                       'execBlock', 
+                       tempLang)
+    }
 }
 
 /// /////////////////////////////////
