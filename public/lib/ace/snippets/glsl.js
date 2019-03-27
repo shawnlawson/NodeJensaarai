@@ -29,7 +29,7 @@ snippet rgb\n\
 	TDRGBToHSV(${1:vec3})\n\
 ## Quick stuff\n\
 #backbuffer\n\
-snippet back\n\
+snippet backbuffer\n\
 	sTD2DInputs[0]\n\
 #vec2\n\
 snippet vc\n\
